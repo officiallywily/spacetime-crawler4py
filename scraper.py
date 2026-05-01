@@ -27,18 +27,24 @@ def extract_next_links(url, resp):
     # get the links from the <a> tags using soup.findall
     # get the findall and make a list of parsed urls, then return it
     if resp.status != 200:
+        # probably will do more than just logging on console
         print(f"Status code: {resp.status}\nError message: {resp.error}")
         return list()
     
     soup = BeautifulSoup(resp.raw_response.content, 'html')
     urls = []
     # go through all the a tags and extract only the urls
-    print(soup.find_all('a', href = True))
-    
+    # print(soup.find_all('a', href = True))
+    for element in soup.find_all('a', href = True)):
+        # remove fragments
+        # https://stackoverflow.com/questions/5815747/beautifulsoup-getting-href
+        raw_url = element.get('href')
+        clean_url = raw_url.split('#')[0]
+        urls.append(clean_url)
 
 
 
-    return list()
+    return urls
 
 def is_valid(url):
     # Decide whether to crawl this url or not. 
