@@ -1,6 +1,7 @@
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+from urllib.parse import joinurl
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -31,15 +32,28 @@ def extract_next_links(url, resp):
         print(f"Status code: {resp.status}\nError message: {resp.error}")
         return list()
     
-    soup = BeautifulSoup(resp.raw_response.content, 'html')
+    soup = BeautifulSoup(resp.raw_response.content, "lxml")
     urls = []
     # go through all the a tags and extract only the urls
     # print(soup.find_all('a', href = True))
-    for element in soup.find_all('a', href = True)):
+    for element in soup.find_all('a', href = True):
         # remove fragments
         # https://stackoverflow.com/questions/5815747/beautifulsoup-getting-href
+        base_url = resp.url
         raw_url = element.get('href')
-        clean_url = raw_url.split('#')[0]
+        stripped_url = raw_url.strip()
+        
+        if stripped_url == "" or stripped_url[0] == "#":
+            continue
+        
+        full_url = urljoin(base_url, stripped_url)
+
+        clean_url = stripped_url.split('#')[0]
+        # need to make a full url now to cover for things like /about or ../about or about
+        # probably need to handle edge cases
+        # empty href
+        # only a fragment in href
+        # other links
         urls.append(clean_url)
 
 
