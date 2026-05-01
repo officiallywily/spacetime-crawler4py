@@ -23,15 +23,19 @@ def extract_next_links(url, resp):
     #   get the error code and console log it for debugging
     #   return an empty list
     # otherwise proceed with the regular logic
-    # get all the <a> tags with href
-    # get the links from the <a> tags
+    # get all the <a> tags (they have the links)
+    # get the links from the <a> tags using soup.findall
+    # get the findall and make a list of parsed urls, then return it
     if resp.status != 200:
         print(f"Status code: {resp.status}\nError message: {resp.error}")
         return list()
     
     soup = BeautifulSoup(resp.raw_response.content, 'html')
     urls = []
-    print(soup)
+    # go through all the a tags and extract only the urls
+    print(soup.find_all('a', href = True))
+    
+
 
 
     return list()
