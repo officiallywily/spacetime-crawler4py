@@ -31,24 +31,44 @@ def extract_next_links(url, resp):
         # probably will do more than just logging on console
         print(f"Status code: {resp.status}\nError message: {resp.error}")
         return list()
-    
+
+    # maybe there is no raw response too
+    if not resp.raw_response:
+        return list()
+
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
     urls = []
     # go through all the a tags and extract only the urls
     # print(soup.find_all('a', href = True))
+    # base_url to create full urls
+    base_url = resp.url if resp.url else url
     for element in soup.find_all('a', href = True):
         # remove fragments
         # https://stackoverflow.com/questions/5815747/beautifulsoup-getting-href
-        base_url = resp.url
+        # ensure there is a base_url (accoundting for bad responses with no url)
+        # https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a
+        # apparently there are other href edge cases
+        # Telephone numbers with tel: URLs
+        # Email addresses with mailto: URLs
+        # SMS text messages with sms: URLs
+        # Executable code with javascript: URLs
         raw_url = element.get('href')
         stripped_url = raw_url.strip()
+        # lower case helps check for startswith() efficiently
+        stripped_url_lowered = stripped_url.lower() 
         
-        if stripped_url == "" or stripped_url[0] == "#":
+        if (stripped_url_lowered == "" 
+            or stripped_url_lowered[0] == "#"
+            or stripped_url_lowered.startswith("tel:")
+            or stripped_url_lowered.startswith("mailto:")
+            or stripped_url_lowered.startswith("sms:")
+            or stripped_url_lowered.startswith("javascript:")):
             continue
         
         full_url = urljoin(base_url, stripped_url)
 
-        clean_url = stripped_url.split('#')[0]
+        # lowercase to make sure capitalizaiton doesnt cause dupes
+        clean_url = full_url.split('#')[0]
         # need to make a full url now to cover for things like /about or ../about or about
         # probably need to handle edge cases
         # empty href
