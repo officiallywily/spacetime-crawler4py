@@ -1,5 +1,6 @@
 import re
 from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -15,6 +16,24 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
+
+    # pseudocode:
+    # response validity tests
+    # if the response is invalid (response code is not 200)
+    #   get the error code and console log it for debugging
+    #   return an empty list
+    # otherwise proceed with the regular logic
+    # get all the <a> tags with href
+    # get the links from the <a> tags
+    if resp.status != 200:
+        print(f"Status code: {resp.status}\nError message: {resp.error}")
+        return list()
+    
+    soup = BeautifulSoup(resp.raw_response.content, 'html')
+    urls = []
+    print(soup)
+
+
     return list()
 
 def is_valid(url):
