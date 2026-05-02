@@ -119,7 +119,7 @@ def is_valid(url):
         host = parsed.hostname
         
         if not is_valid_host(host):
-            print(f"bad host found: {host}")
+            print(f"bad host found: {host}\n\t full url: {url}")
             return False
 
         
@@ -134,7 +134,8 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
             return False
         
-        print(f"good host found! {host}")
+        print(f"good host found! {host}\n\tfull url: {url}")
+        return True
 
     except TypeError:
         print ("TypeError for ", parsed)
