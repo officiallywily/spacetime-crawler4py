@@ -5,6 +5,9 @@ from utils.server_registration import get_cache_server
 from utils.config import Config
 from crawler import Crawler
 
+import multiprocessing as mp
+
+
 
 def main(config_file, restart):
     cparser = ConfigParser()
@@ -16,6 +19,12 @@ def main(config_file, restart):
 
 
 if __name__ == "__main__":
+
+    try:
+        mp.set_start_method("fork")
+    except RuntimeError:
+        pass  
+
     parser = ArgumentParser()
     parser.add_argument("--restart", action="store_true", default=False)
     parser.add_argument("--config_file", type=str, default="config.ini")

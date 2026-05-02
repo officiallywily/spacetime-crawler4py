@@ -80,15 +80,50 @@ def extract_next_links(url, resp):
 
     return urls
 
+_ALLOWED_SUBDOMAINS = (
+    ".ics.uci.edu",
+    ".cs.uci.edu",
+    ".informatics.uci.edu",
+    ".stat.uci.edu",
+)
+_ALLOWED_SUBDOMAINS_BUT_NO_PERIOD_IN_THE_BEGINNING = (
+    "ics.uci.edu",
+    "cs.uci.edu",
+    "informatics.uci.edu",
+    "stat.uci.edu",
+)
+
+def is_valid_host(host: str) -> bool:
+    if not host:
+        return False
+    host = host.lower()
+    if host in _ALLOWED_SUBDOMAINS_BUT_NO_PERIOD_IN_THE_BEGINNING: # no period in the beginning for a lot of domains
+        return True
+    for subdomain in _ALLOWED_SUBDOMAINS: # period included for subdomains
+        if host.endswith(subdomain):
+            return True
+    
+    return False
+
 def is_valid(url):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
+
     try:
+        #  This function returns a 6-item named tuple ParseResult or ParseResultBytes
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        return not re.match(
+
+        host = parsed.hostname
+        
+        if not is_valid_host(host):
+            print(f"bad host found: {host}")
+            return False
+
+        
+        if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
@@ -96,7 +131,10 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
+            return False
+        
+        print(f"good host found! {host}")
 
     except TypeError:
         print ("TypeError for ", parsed)
