@@ -108,3 +108,7 @@ venv.bak/
 
 *.full.py
 *.shelve
+
+# added by me
+*.shelve.db
+output.txt
