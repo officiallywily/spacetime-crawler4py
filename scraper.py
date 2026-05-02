@@ -8,53 +8,21 @@ def scraper(url, resp):
     return [link for link in links if is_valid(link)]
 
 def extract_next_links(url, resp):
-    # Implementation required.
-    # url: the URL that was used to get the page
-    # resp.url: the actual url of the page
-    # resp.status: the status code returned by the server. 200 is OK, you got the page. Other numbers mean that there was some kind of problem.
-    # resp.error: when status is not 200, you can check the error here, if needed.
-    # resp.raw_response: this is where the page actually is. More specifically, the raw_response has two parts:
-    #         resp.raw_response.url: the url, again
-    #         resp.raw_response.content: the content of the page!
-    # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-
-    # pseudocode:
-    # response validity tests
-    # if the response is invalid (response code is not 200)
-    #   get the error code and console log it for debugging
-    #   return an empty list
-    # otherwise proceed with the regular logic
-    # get all the <a> tags (they have the links)
-    # get the links from the <a> tags using soup.findall
-    # get the findall and make a list of parsed urls, then return it
     if resp.status != 200:
         # probably will do more than just logging on console
-        print(f"Status code: {resp.status}\nError message: {resp.error}")
-        return list()
+        return []
 
-    # maybe there is no raw response too
-    if not resp.raw_response:
-        return list()
+    if not resp.raw_response.content:
+        print(f"{resp.raw_response}")
+        return []
 
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
     urls = []
-    # go through all the a tags and extract only the urls
-    # print(soup.find_all('a', href = True))
-    # base_url to create full urls
+
     base_url = resp.url if resp.url else url
     for element in soup.find_all('a', href = True):
-        # remove fragments
-        # https://stackoverflow.com/questions/5815747/beautifulsoup-getting-href
-        # ensure there is a base_url (accoundting for bad responses with no url)
-        # https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a
-        # apparently there are other href edge cases
-        # Telephone numbers with tel: URLs
-        # Email addresses with mailto: URLs
-        # SMS text messages with sms: URLs
-        # Executable code with javascript: URLs
         raw_url = element.get('href')
         stripped_url = raw_url.strip()
-        # lower case helps check for startswith() efficiently
         stripped_url_lowered = stripped_url.lower() 
         
         if (stripped_url_lowered == "" 
@@ -66,14 +34,8 @@ def extract_next_links(url, resp):
             continue
         
         full_url = urljoin(base_url, stripped_url)
-
-        # lowercase to make sure capitalizaiton doesnt cause dupes
         clean_url = full_url.split('#')[0]
-        # need to make a full url now to cover for things like /about or ../about or about
-        # probably need to handle edge cases
-        # empty href
-        # only a fragment in href
-        # other links
+
         urls.append(clean_url)
 
 
@@ -97,21 +59,16 @@ def is_valid_host(host: str) -> bool:
     if not host:
         return False
     host = host.lower()
-    if host in _ALLOWED_SUBDOMAINS_BUT_NO_PERIOD_IN_THE_BEGINNING: # no period in the beginning for a lot of domains
+    if host in _ALLOWED_SUBDOMAINS_BUT_NO_PERIOD_IN_THE_BEGINNING:
         return True
-    for subdomain in _ALLOWED_SUBDOMAINS: # period included for subdomains
+    for subdomain in _ALLOWED_SUBDOMAINS:
         if host.endswith(subdomain):
             return True
     
     return False
 
 def is_valid(url):
-    # Decide whether to crawl this url or not. 
-    # If you decide to crawl it, return True; otherwise return False.
-    # There are already some conditions that return False.
-
     try:
-        #  This function returns a 6-item named tuple ParseResult or ParseResultBytes
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
@@ -119,7 +76,6 @@ def is_valid(url):
         host = parsed.hostname
         
         if not is_valid_host(host):
-            print(f"bad host found: {host}\n\t full url: {url}")
             return False
 
         
@@ -134,7 +90,6 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
             return False
         
-        print(f"good host found! {host}\n\tfull url: {url}")
         return True
 
     except TypeError:
