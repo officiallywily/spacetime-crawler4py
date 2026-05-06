@@ -3,6 +3,57 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
+# constants
+_ALLOWED_SUBDOMAINS = (
+    ".ics.uci.edu",
+    ".cs.uci.edu",
+    ".informatics.uci.edu",
+    ".stat.uci.edu",
+)
+_ALLOWED_SUBDOMAINS_BUT_NO_PERIOD_IN_THE_BEGINNING = (
+    "ics.uci.edu",
+    "cs.uci.edu",
+    "informatics.uci.edu",
+    "stat.uci.edu",
+)
+_DISALLOWED_QUERY_PARAMS = {
+    "session",
+    "sessionid",
+    "sid",
+    "phpsessid",
+    "jsessionid",
+    "action",
+}
+_CALENDAR_WORDS = {
+    "year",
+    "month",
+    "day",
+    "date",
+    "calendar",
+    "time",
+    "week"
+}
+CALENDAR_WORD_LIMIT = 2
+MAX_QUERY_PARAMS = 4
+MAX_QUERY_LENGTH = 200
+MAX_PATH_SEGMENTS = 15
+MAX_URL_LENGTH = 1000
+
+# helper functions
+
+def is_valid_host(host: str) -> bool:
+    if not host:
+        return False
+    host = host.lower()
+    if host in _ALLOWED_SUBDOMAINS_BUT_NO_PERIOD_IN_THE_BEGINNING:
+        return True
+    for subdomain in _ALLOWED_SUBDOMAINS:
+        if host.endswith(subdomain):
+            return True
+    
+    return False
+
+
 # https://www.iquanti.com/blog/guide-seo-spider-traps-causes-solutions/ helps a lot
 
 def scraper(url, resp):
@@ -14,7 +65,8 @@ def extract_next_links(url, resp):
         # probably will do more than just logging on console
         return []
 
-    if not resp.raw_response.content:
+    # if raw_response is none, .content can't be accessed. c++ invalid access type shiiii
+    if not resp.raw_response or resp.raw_response.content:
         print(f"{resp.raw_response}")
         return []
 
@@ -44,43 +96,6 @@ def extract_next_links(url, resp):
 
     return urls
 
-_ALLOWED_SUBDOMAINS = (
-    ".ics.uci.edu",
-    ".cs.uci.edu",
-    ".informatics.uci.edu",
-    ".stat.uci.edu",
-)
-_ALLOWED_SUBDOMAINS_BUT_NO_PERIOD_IN_THE_BEGINNING = (
-    "ics.uci.edu",
-    "cs.uci.edu",
-    "informatics.uci.edu",
-    "stat.uci.edu",
-)
-_DISALLOWED_QUERY_PARAMS = {
-    "session",
-    "sessionid",
-    "sid",
-    "phpsessid",
-    "jsessionid",
-    "action"
-}
-MAX_QUERY_PARAMS = 4
-MAX_QUERY_LENGTH = 200
-MAX_PATH_SEGMENTS = 15
-MAX_URL_LENGTH = 1000
-
-def is_valid_host(host: str) -> bool:
-    if not host:
-        return False
-    host = host.lower()
-    if host in _ALLOWED_SUBDOMAINS_BUT_NO_PERIOD_IN_THE_BEGINNING:
-        return True
-    for subdomain in _ALLOWED_SUBDOMAINS:
-        if host.endswith(subdomain):
-            return True
-    
-    return False
-
 def is_valid(url):
     try:
         # length of url checking
@@ -96,7 +111,7 @@ def is_valid(url):
 
         # host checking. (must expand for traps later... for now just keep it to the
         # basic set of four urls)
-        host = parsed.hostname.lower()
+        host = parsed.hostname
         
         if not is_valid_host(host):
             return False
@@ -121,26 +136,38 @@ def is_valid(url):
         queries = parsed.query.split('&')
         if len(queries) > MAX_QUERY_PARAMS:
             return False
+        cal_words = 0
         for query in queries:
             key = query.split("=", 1)[0].lower()
             if key in _DISALLOWED_QUERY_PARAMS:
                 return False
+            if key in _CALENDAR_WORDS:
+                    # this is to prevent false positives based off
+                    # only 1 calendar word such as year
+                cal_words += 1
+                if cal_words > CALENDAR_WORD_LIMIT: 
+                    return False
 
         # path checking
 
         # checking for paths that repeat 3 times or more (like /about/about/about
         # or /about/people/about/people/about/...
         # checking for paths that are longer than 15 segments (just a rough number i chose)
+        # also check path
         path_segments = parsed.path.split('/')
 
         path_dict = {}
         for segment in path_segments:
+            if segment == '':
+                continue
             path_dict[segment] = path_dict.get(segment, 0) + 1
             if path_dict[segment] > 2:
                 return False
 
         if len(path_segments) > MAX_PATH_SEGMENTS:
             return False
+
+
 
         # blocks weird extensions taht arenbt websites
         
