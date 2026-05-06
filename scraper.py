@@ -84,7 +84,7 @@ def is_valid_host(host: str) -> bool:
 def is_valid(url):
     try:
         # length of url checking
-        if len(url) >= MAX_URL_LENGTH: 
+        if len(url) > MAX_URL_LENGTH: 
             return False
 
         parsed = urlparse(url)
@@ -122,7 +122,8 @@ def is_valid(url):
         if len(queries) > MAX_QUERY_PARAMS:
             return False
         for query in queries:
-            if query.lower().startswith(f"{_DISALLOWED_QUERY_PARAMS}="):
+            key = query.split("=", 1)[0].lower()
+            if key in _DISALLOWED_QUERY_PARAMS:
                 return False
 
         # path checking
@@ -135,10 +136,10 @@ def is_valid(url):
         path_dict = {}
         for segment in path_segments:
             path_dict[segment] = path_dict.get(segment, 0) + 1
-            if path_dict[segment] > MAX_PATH_SEGMENTS:
+            if path_dict[segment] > 2:
                 return False
 
-        if len(path_segments) > 15:
+        if len(path_segments) > MAX_PATH_SEGMENTS:
             return False
 
         # blocks weird extensions taht arenbt websites
