@@ -113,3 +113,4 @@ venv.bak/
 *.shelve.db
 output.txt
 practice and testing/
+.DS_Store
