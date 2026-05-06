@@ -3,6 +3,8 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
+# https://www.iquanti.com/blog/guide-seo-spider-traps-causes-solutions/ helps a lot
+
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
@@ -54,6 +56,18 @@ _ALLOWED_SUBDOMAINS_BUT_NO_PERIOD_IN_THE_BEGINNING = (
     "informatics.uci.edu",
     "stat.uci.edu",
 )
+_DISALLOWED_QUERY_PARAMS = {
+    "session",
+    "sessionid",
+    "sid",
+    "phpsessid",
+    "jsessionid",
+    "action"
+}
+MAX_QUERY_PARAMS = 4
+MAX_QUERY_LENGTH = 200
+MAX_PATH_SEGMENTS = 15
+MAX_URL_LENGTH = 1000
 
 def is_valid_host(host: str) -> bool:
     if not host:
@@ -69,6 +83,10 @@ def is_valid_host(host: str) -> bool:
 
 def is_valid(url):
     try:
+        # length of url checking
+        if len(url) >= MAX_URL_LENGTH: 
+            return False
+
         parsed = urlparse(url)
 
         # scheme checking
@@ -78,7 +96,7 @@ def is_valid(url):
 
         # host checking. (must expand for traps later... for now just keep it to the
         # basic set of four urls)
-        host = parsed.hostname
+        host = parsed.hostname.lower()
         
         if not is_valid_host(host):
             return False
@@ -96,20 +114,32 @@ def is_valid(url):
         # 
         # also block action= queries because it has unwanted effects like downloading
 
+        # also check for query of long character lengths (one query param might be long)
+        if len(parsed.query) > MAX_QUERY_LENGTH:
+            return False 
+
         queries = parsed.query.split('&')
-        if len(queries) > 3:
+        if len(queries) > MAX_QUERY_PARAMS:
             return False
         for query in queries:
-            if query.starts_with("action="):
+            if query.lower().startswith(f"{_DISALLOWED_QUERY_PARAMS}="):
                 return False
 
         # path checking
 
         # checking for paths that repeat 3 times or more (like /about/about/about
         # or /about/people/about/people/about/...
-        # checking for paths that are longer than 10 segments (just a rough number i chose)
-        path = parsed.path()
+        # checking for paths that are longer than 15 segments (just a rough number i chose)
+        path_segments = parsed.path.split('/')
 
+        path_dict = {}
+        for segment in path_segments:
+            path_dict[segment] = path_dict.get(segment, 0) + 1
+            if path_dict[segment] > MAX_PATH_SEGMENTS:
+                return False
+
+        if len(path_segments) > 15:
+            return False
 
         # blocks weird extensions taht arenbt websites
         
