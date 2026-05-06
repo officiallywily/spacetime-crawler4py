@@ -70,14 +70,48 @@ def is_valid_host(host: str) -> bool:
 def is_valid(url):
     try:
         parsed = urlparse(url)
+
+        # scheme checking
+
         if parsed.scheme not in set(["http", "https"]):
             return False
 
+        # host checking. (must expand for traps later... for now just keep it to the
+        # basic set of four urls)
         host = parsed.hostname
         
         if not is_valid_host(host):
             return False
 
+        # query checking
+
+        # checking for query length being 4 or more (too long)
+        # Repetitive Directories: URLs that repeat patterns, such as /folder/page/folder/page/, 
+        # frequently signal a loop trap.Excessive Dynamic Parameters: Long, messy query strings 
+        # or excessive session IDs (?sessionid=...) can generate unique URLs for identical content.
+        # Infinite Calendar/Filtering: Dynamic calendars that allow navigation to the year 9999 
+        # or complex filter combinations (e.g., size, color, price) on e-commerce sites often 
+        # create endless crawl paths.Similar Content, Different URL: If multiple deep-path URLs 
+        # return identical page content, it is likely a trap. (found online)
+        # 
+        # also block action= queries because it has unwanted effects like downloading
+
+        queries = parsed.query.split('&')
+        if len(queries) > 3:
+            return False
+        for query in queries:
+            if query.starts_with("action="):
+                return False
+
+        # path checking
+
+        # checking for paths that repeat 3 times or more (like /about/about/about
+        # or /about/people/about/people/about/...
+        # checking for paths that are longer than 10 segments (just a rough number i chose)
+        path = parsed.path()
+
+
+        # blocks weird extensions taht arenbt websites
         
         if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
