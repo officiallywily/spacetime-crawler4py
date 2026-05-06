@@ -35,44 +35,6 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 # the data into a json file on shut off. load in from json file on start as long as 
 # frontier is empty. if frontier is empty on start, i should wipe the logged file 
 
-# data structures
-unique_urls_set = set()
-largest_page = ("", 0) #tuple of (url, count)
-unique_pages_set = set()
-subdomain_count = {}
-
-# helpers
-def can_crawl(resp) -> bool:
-    return resp.status == 200 and resp.raw_response and resp.raw_response.content
-def update_data(url, resp):
-    if not is_valid(url) or not can_crawl(resp):
-        return
-    
-    increment_subdomain_count(url)
-    soup = BeautifulSoup(resp.raw_response.content, "lxml")
-    process_page_words(url, soup)
-
-def process_page_words(url, soup):
-    pass
-def increment_subdomain_count(url):
-    parsed = urlparse(url)
-    host = parsed.hostname
-    path = parsed.path or ""
-    full_page = host + path
-    if full_page not in unique_pages_set:
-        unique_pages_set.add(full_page)
-        subdomain_count[host] = subdomain_count.get(host, 0) + 1
-    
-
-
-
-
-
-
-
-
-
-
 # constants
 _ALLOWED_SUBDOMAINS = (
     ".ics.uci.edu",
@@ -107,6 +69,7 @@ _DISALLOWED_PATHS = {
     "events",
     "calendar",
 }
+_NON_TEXT_TAGS = ["script", "style", "iframe", "noscript", "svg", "canvas", "head", "title", "meta"]
 
 CALENDAR_WORD_LIMIT = 2
 MAX_QUERY_PARAMS = 4
@@ -114,7 +77,68 @@ MAX_QUERY_LENGTH = 200
 MAX_PATH_SEGMENTS = 15
 MAX_URL_LENGTH = 1000
 
-# helper functions
+
+# global variables
+unique_urls_set = set()
+largest_page = ("", 0) #tuple of (url, count)
+unique_pages_set = set()
+subdomain_count = {}
+word_freq = {}
+
+# helpers
+
+def computeWordFrequencies(tokens: list[str]) -> dict[str, int]:
+    frequencyMap: dict[str, int] = {}
+    for token in tokens:
+        frequencyMap[token] = frequencyMap.get(token, 0) + 1
+    return frequencyMap
+
+def can_crawl(resp) -> bool:
+    return resp.status == 200 and resp.raw_response and resp.raw_response.content
+def update_data(url, resp):
+    if not is_valid(url) or not can_crawl(resp):
+        return
+    
+    increment_subdomain_count(url)
+    soup = BeautifulSoup(resp.raw_response.content, "lxml")
+    process_page_words(url, soup)
+
+def process_page_words(url, soup):
+    global largest_page
+    global word_freq
+
+    for tag in soup(_NON_TEXT_TAGS):
+        tag.decompose()
+    
+    text = soup.get_text(separator=" ", strip=True).lower()
+    words = text.split(' ')
+
+    total_words = len(words)
+
+    if total_words > largest_page[1]:
+        largest_page = (url, total_words)
+
+    for w in words:
+        if w not in ENGLISH_STOP_WORDS:
+            word_freq[w] = word_freq.get(w, 0) + 1
+
+def increment_subdomain_count(url):
+    global unique_pages_set
+    global subdomain_count
+
+    if not is_valid(url):
+        return
+    
+    parsed = urlparse(url)
+    host = parsed.hostname.lower()
+    path = parsed.path or "/"
+    if not path.endswith('/'):
+        path = path + '/'
+    full_page = host + path
+    if full_page not in unique_pages_set:
+        unique_pages_set.add(full_page)
+        subdomain_count[host] = subdomain_count.get(host, 0) + 1
+
 
 def is_valid_host(host: str) -> bool:
     if not host:
