@@ -2,6 +2,39 @@ import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+
+# logging... 
+# total unique pages
+#   use a set and add to the set on every VALID page visit WITHOUT FRAGMENT
+# page with most words: keep track of 
+#   "most_words_page" dictionary:
+#   { url: FULL_URL (string) , word_count: (int) }
+#   everytime we crawl a page, keep accumulate the number of words 
+#   and chck against most_word_page.word_count value. 
+#   update as needed
+# 50 most common words found
+#   use a hash table where keys are all the NON-STOP WORD words seen (lowercase)
+#   and values are the count.
+#   every single word the crawler sees will be accounted for
+#   to sort:
+#   convert hash table into a list of tuples [(word, count)]
+#   run a sorting algorithm on the count
+#   Get the top 50 words and their count
+#
+# number of subdomains and the amount of each listed alphabetically
+#   treat http and https as the same subdomain.
+#   treat www.example.com and example.com as different subdomains
+#   treat example.com/ and example.com/?randomquery the same subdomain & page (ignore queries)
+#   basically only keep subdomain + domain + path as unique page. Trim everything else
+#   use hash table: {subdomain: subdomain + domain}
+#   increment each subdomain each time it's visited
+#   turn into list of tuples and sort by alphabetical order
+
+
+
+
+
 
 # constants
 _ALLOWED_SUBDOMAINS = (
@@ -96,7 +129,7 @@ def extract_next_links(url, resp):
             continue
         
         full_url = urljoin(base_url, stripped_url)
-        clean_url = full_url.split('#')[0]
+        clean_url = full_url.split('#')[0] # defragmenting
 
         urls.append(clean_url)
 
@@ -122,6 +155,29 @@ def is_valid(url):
         host = parsed.hostname
         
         if not is_valid_host(host):
+            return False
+
+        # path checking
+
+        # checking for paths that repeat 3 times or more (like /about/about/about
+        # or /about/people/about/people/about/...
+        # checking for paths that are longer than 15 segments (just a rough number i chose)
+        # also check path
+
+        if any(bad_path in parsed.path.lower() for bad_path in _DISALLOWED_PATHS):
+            return False
+
+        path_segments = parsed.path.split('/')
+
+        path_dict = {}
+        for segment in path_segments:
+            if segment == '':
+                continue
+            path_dict[segment] = path_dict.get(segment, 0) + 1
+            if path_dict[segment] > 2:
+                return False
+
+        if len(path_segments) > MAX_PATH_SEGMENTS:
             return False
 
         # query checking
@@ -155,31 +211,6 @@ def is_valid(url):
                 cal_words += 1
                 if cal_words > CALENDAR_WORD_LIMIT: 
                     return False
-
-        # path checking
-
-        # checking for paths that repeat 3 times or more (like /about/about/about
-        # or /about/people/about/people/about/...
-        # checking for paths that are longer than 15 segments (just a rough number i chose)
-        # also check path
-
-        if any(bad_path in parsed.path.lower() for bad_path in _DISALLOWED_PATHS):
-            return False
-
-        path_segments = parsed.path.split('/')
-
-        path_dict = {}
-        for segment in path_segments:
-            if segment == '':
-                continue
-            path_dict[segment] = path_dict.get(segment, 0) + 1
-            if path_dict[segment] > 2:
-                return False
-
-        if len(path_segments) > MAX_PATH_SEGMENTS:
-            return False
-
-
 
         # blocks weird extensions taht arenbt websites
         
