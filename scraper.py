@@ -33,6 +33,11 @@ _CALENDAR_WORDS = {
     "time",
     "week"
 }
+_DISALLOWED_PATHS = {
+    "events",
+    "calendar",
+}
+
 CALENDAR_WORD_LIMIT = 2
 MAX_QUERY_PARAMS = 4
 MAX_QUERY_LENGTH = 200
@@ -55,6 +60,9 @@ def is_valid_host(host: str) -> bool:
 
 
 # https://www.iquanti.com/blog/guide-seo-spider-traps-causes-solutions/ helps a lot
+# https://www.conductor.com/academy/crawler-traps/
+# because i missed the testing due date, i am building the crawler a bit blind, and
+# trying to make it very robust. adklsfjlkadsfjkldasjfkldasjfkladjslkfjaslkfjdslakjfdl
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -66,7 +74,7 @@ def extract_next_links(url, resp):
         return []
 
     # if raw_response is none, .content can't be accessed. c++ invalid access type shiiii
-    if not resp.raw_response or resp.raw_response.content:
+    if not resp.raw_response or not resp.raw_response.content:
         print(f"{resp.raw_response}")
         return []
 
@@ -154,6 +162,10 @@ def is_valid(url):
         # or /about/people/about/people/about/...
         # checking for paths that are longer than 15 segments (just a rough number i chose)
         # also check path
+
+        if any(bad_path in parsed.path.lower() for bad_path in _DISALLOWED_PATHS):
+            return False
+
         path_segments = parsed.path.split('/')
 
         path_dict = {}
