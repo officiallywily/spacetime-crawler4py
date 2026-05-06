@@ -31,6 +31,43 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 #   increment each subdomain each time it's visited
 #   turn into list of tuples and sort by alphabetical order
 
+# also need persistence on shutoff of crawler. Maybe I should program it to output 
+# the data into a json file on shut off. load in from json file on start as long as 
+# frontier is empty. if frontier is empty on start, i should wipe the logged file 
+
+# data structures
+unique_urls_set = set()
+largest_page = ("", 0) #tuple of (url, count)
+unique_pages_set = set()
+subdomain_count = {}
+
+# helpers
+def can_crawl(resp) -> bool:
+    return resp.status == 200 and resp.raw_response and resp.raw_response.content
+def update_data(url, resp):
+    if not is_valid(url) or not can_crawl(resp):
+        return
+    
+    increment_subdomain_count(url)
+    soup = BeautifulSoup(resp.raw_response.content, "lxml")
+    process_page_words(url, soup)
+
+def process_page_words(url, soup):
+    pass
+def increment_subdomain_count(url):
+    parsed = urlparse(url)
+    host = parsed.hostname
+    path = parsed.path or ""
+    full_page = host + path
+    if full_page not in unique_pages_set:
+        unique_pages_set.add(full_page)
+        subdomain_count[host] = subdomain_count.get(host, 0) + 1
+    
+
+
+
+
+
 
 
 
@@ -98,17 +135,13 @@ def is_valid_host(host: str) -> bool:
 # trying to make it very robust. adklsfjlkadsfjkldasjfkldasjfkladjslkfjaslkfjdslakjfdl
 
 def scraper(url, resp):
+    # valid response -> get the url counted in subdomains
+    update_data(url, resp)
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
 def extract_next_links(url, resp):
-    if resp.status != 200:
-        # probably will do more than just logging on console
-        return []
-
-    # if raw_response is none, .content can't be accessed. c++ invalid access type shiiii
-    if not resp.raw_response or not resp.raw_response.content:
-        print(f"{resp.raw_response}")
+    if not can_crawl(resp):
         return []
 
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
