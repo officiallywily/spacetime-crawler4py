@@ -87,12 +87,6 @@ word_freq = {}
 
 # helpers
 
-def computeWordFrequencies(tokens: list[str]) -> dict[str, int]:
-    frequencyMap: dict[str, int] = {}
-    for token in tokens:
-        frequencyMap[token] = frequencyMap.get(token, 0) + 1
-    return frequencyMap
-
 def can_crawl(resp) -> bool:
     return resp.status == 200 and resp.raw_response and resp.raw_response.content
 def update_data(url, resp):
@@ -111,7 +105,7 @@ def process_page_words(url, soup):
         tag.decompose()
     
     text = soup.get_text(separator=" ", strip=True).lower()
-    words = text.split(' ')
+    words = text.split()
 
     total_words = len(words)
 
