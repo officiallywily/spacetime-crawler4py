@@ -72,31 +72,22 @@ def process_data(url, resp):
     process_page_words(url, resp)
 
 def process_page_words(url, resp):
-    global largest_page
-    global word_freq
-
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
         
     for tag in soup(_NON_TEXT_TAGS):
         tag.decompose()
     
-    text = soup.get_text(separator=" ", strip=True).lower()
-    words = re.findall(r'[a-zA-Z]+', text)
+    text = soup.get_text().lower()
+    words = re.findall(r'[a-z]+', text)
 
     total_words = len(words)
-
-    if total_words > largest_page[1]:
-        with open("MyLogs/max_words.txt", "w") as f:
-            largest_page = (url, total_words)
-            f.write(f"{url} {total_words}")
+    non_stop_words = []
 
     for w in words:
-        if w[-1] in _PUNCTUATION_TO_STRIP:
-            w = w[:-1]
-        if len(w) == 0:
-            continue
         if w not in ENGLISH_STOP_WORDS:
-            word_freq[w] = word_freq.get(w, 0) + 1
+            non_stop_words.append(w)
+    
+    return total_words, non_stop_words
 
 def process_page(url):
     global unique_pages_set
@@ -104,8 +95,6 @@ def process_page(url):
 
     if not is_valid(url):
         return
-
-
 
     parsed = urlparse(url)
     host = parsed.hostname.lower()
