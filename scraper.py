@@ -43,7 +43,8 @@ _DISALLOWED_QUERY_PARAMS = {
     "do",
     "idx",
     "image",
-    "tab_files"
+    "tab_files",
+    "ns"
 }
 _CALENDAR_WORDS = {
     "year",
