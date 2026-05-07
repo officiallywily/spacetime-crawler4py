@@ -2,7 +2,7 @@ import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+from spacy.lang.en.stop_words import STOP_WORDS as ENGLISH_STOP_WORDS
 from math import inf
 import json
 
