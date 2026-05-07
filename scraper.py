@@ -4,6 +4,21 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 from math import inf
+import json
+
+# region scratchbook
+#
+# 1. Data about URLs and words will be logged into a JSON file
+# 2. Parse the json file with a separate script to obtain the following info
+# when the crawler is done (frontier empty)
+# 3. information needed:
+#   * unique pages count
+#   * longest page (in terms of word count)
+#   * top 50 words
+#   * total unique subdomains found (will be the same as total pages count since only host + path matter)
+#   * list of subdomains alphabetically with count
+#
+# endregion
 
 # region Constants
 _ALLOWED_SUBDOMAINS = (
@@ -39,6 +54,35 @@ _DISALLOWED_PATHS = {
     "events",
     "calendar",
 }
+_ADDITIONAL_STOP_WORDS = {
+    "nt",
+    "january",
+    "february",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december",
+    "https",
+    "http",
+    "com",
+    "www",
+    "login",
+    "about",
+    "search",
+    "help",
+    "copyright",
+    "wiki",
+    "sidebar",
+    "navigation",
+    "view",
+    "history",
+}
 _NON_TEXT_TAGS = ["script", "style", "iframe", "noscript", "svg", "canvas", "head", "title", "meta"]
 _PUNCTUATION_TO_STRIP = {'.', ',', '!', '?', '"'}
 
@@ -47,6 +91,7 @@ MAX_QUERY_PARAMS = 4
 MAX_QUERY_LENGTH = 200
 MAX_PATH_SEGMENTS = 15
 MAX_URL_LENGTH = 1000
+MAX_VISITS_PER_URL = 10000
 #endregion
 
 
@@ -54,8 +99,7 @@ MAX_URL_LENGTH = 1000
 unique_urls_set = set()
 largest_page = ("", 0) #tuple of (url, count)
 unique_pages_set = set()
-subdomain_count = {}
-word_freq = {}
+subdomain_counter = {}
 # endregion
 
 # region Helpers
@@ -63,15 +107,27 @@ word_freq = {}
 def can_crawl(resp) -> bool:
     return resp.status == 200 and resp.raw_response and resp.raw_response.content
 
-def process_data(url, resp):
+# just write into a json file for every valid url that we visit and process
+# { url: string, core_url: string, num_words: int, words: list of words }
+def log_data(url, resp):
 
     if not is_valid(url) or not can_crawl(resp):
         return
 
-    process_page(url)
-    process_page_words(url, resp)
+    core_url = get_formatted_url(url) #core_url is the host + path
+    total_words, valid_word_count_dict = get_formatted_words(url, resp)
 
-def process_page_words(url, resp):
+    with open("crawl_results.json", "a") as f:
+        json = {
+            "url": url,
+            "core_url": core_url,
+            "word_count": total_words,
+            "words": valid_word_count_dict
+        }
+        json.dump(json, f)
+
+
+def get_formatted_words(url, resp):
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
         
     for tag in soup(_NON_TEXT_TAGS):
@@ -81,17 +137,15 @@ def process_page_words(url, resp):
     words = re.findall(r'[a-z]+', text)
 
     total_words = len(words)
-    non_stop_words = []
+    valid_word_count_dict = {}
 
     for w in words:
-        if w not in ENGLISH_STOP_WORDS:
-            non_stop_words.append(w)
-    
-    return total_words, non_stop_words
+        if w not in ENGLISH_STOP_WORDS or w not in _ADDITIONAL_STOP_WORDS:
+            valid_word_count_dict[w] = valid_word_count_dict.get(w, 0) + 1
+        
+    return total_words, valid_word_count_dict
 
-def process_page(url):
-    global unique_pages_set
-    global subdomain_count
+def get_formatted_url(url):
 
     if not is_valid(url):
         return
@@ -102,10 +156,16 @@ def process_page(url):
     if not path.endswith('/'):
         path = path + '/'
     full_page = host + path
-    if full_page not in unique_pages_set:
-        unique_pages_set.add(full_page)
-        subdomain_count[host] = subdomain_count.get(host, 0) + 1
 
+    return full_page
+
+def is_valid_page(url):
+    core_url = get_formatted_url(url)
+    times_visited = subdomain_counter.get(core_url, 0)
+    if times_visited > MAX_VISITS_PER_URL:
+        return False
+    
+    return True
 
 def is_valid_host(host: str) -> bool:
     if not host:
@@ -116,7 +176,7 @@ def is_valid_host(host: str) -> bool:
     for subdomain in _ALLOWED_SUBDOMAINS:
         if host.endswith(subdomain):
             return True
-    
+
     return False
 
 def get_top_50_words():
@@ -130,7 +190,7 @@ def get_top_50_words():
 # region main functions
 def scraper(url, resp):
     # valid response -> get the url counted in subdomains
-    process_data(url, resp)
+    log_data(url, resp)
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
@@ -258,4 +318,12 @@ def is_valid(url):
         print ("TypeError for ", parsed)
         raise
 
+def make_report():
+    with open("crawl_results.json") as f_cr:
+        data = json.load(f_cr)
+
+        with open("report.txt", "w") as f_r:
+            ...
+
+    pass
 # endregion
