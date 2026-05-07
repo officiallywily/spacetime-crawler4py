@@ -139,7 +139,12 @@ word_counter_buffer = {}
 # region Helpers
 
 def can_crawl(resp) -> bool:
-    return resp.status == 200 and resp.raw_response and resp.raw_response.content
+    if resp.status != 200 or not (resp.raw_response and resp.raw_response.content):
+        return False
+    content_type = resp.raw_response.headers.get("Content-Type", "").lower()
+    if "text/html" not in content_type:
+        return False
+    return True
 
 # just write into a json file for every valid url that we visit and process
 # { url: string, core_url: string, num_words: int, words: list of words }
