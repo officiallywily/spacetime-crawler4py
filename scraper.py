@@ -375,8 +375,8 @@ def make_report():
 
             file_report.write(f"Unique subdomains visited: {len(host_and_core_urls)}\n\n")
             file_report.write("List of subdomains and the amount of pages in them\n")
-            for i, (host, core_urls) in enumerate(host_and_core_urls.items()):
-                file_report.write(f"{i + 1}.\t{host}\n\twas visited {len(core_urls)} times\n")
+            for i, (host, core_urls) in enumerate(sorted(host_and_core_urls.items(), key=lambda x: x[0])):
+                file_report.write(f"{i + 1}.\t{host}\n\thas {len(core_urls)} unique pages\n")
             file_report.write("\n\nTop 50 words\n")
             for i, (word, count) in enumerate(top_50_words):
                 file_report.write(f"\t{i + 1}. {word}:\t{count}\n")
