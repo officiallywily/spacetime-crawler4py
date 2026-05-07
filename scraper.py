@@ -1,3 +1,4 @@
+from enum import unique
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
@@ -84,15 +85,14 @@ _ADDITIONAL_STOP_WORDS = {
     "history",
 }
 _NON_TEXT_TAGS = ["script", "style", "iframe", "noscript", "svg", "canvas", "head", "title", "meta"]
-_PUNCTUATION_TO_STRIP = {'.', ',', '!', '?', '"'}
 
 CALENDAR_WORD_LIMIT = 2
 MAX_QUERY_PARAMS = 4
 MAX_QUERY_LENGTH = 200
 MAX_PATH_SEGMENTS = 15
 MAX_URL_LENGTH = 1000
-MAX_VISITS_PER_PAGE = 2000
-BUFFER_DUMP_SIZE = 2000
+MAX_VISITS_PER_PAGE = 50 # default to 200. testing with lower values to make crawler end faster
+BUFFER_DUMP_SIZE = 20 # default to 2000. testing with lower values to make crawlse end faster
 #endregion
 
 
@@ -115,9 +115,14 @@ def can_crawl(resp) -> bool:
 # from https://www.geeksforgeeks.org/python/append-to-json-file-using-python/
 def update_json():
     global json_entry_buffer
-
+    try:
+        with open("crawl_results.json", "x") as file:
+            json.dump({"words_counter": {}, "url_info": [] }, file)
+    except FileExistsError:
+        pass
+        
     with open("crawl_results.json", 'r+') as file:
-        file_data = json.load(file) or {}
+        file_data = json.load(file)
         file_data["url_info"] = file_data.get("url_info", [])
         file_data["url_info"].extend(json_entry_buffer)
         file_data["words_counter"] = file_data.get("words_counter", {})
@@ -151,11 +156,10 @@ def log_data(url, resp):
     else:
         visited_counter[core_url] = visited_counter.get(core_url, 0) + 2
         
-    total_words = process_words(url, resp)
-
+    total_words = process_words(resp)
     json_entry = {
         "url": url,
-        "core_url": core_url,
+        "core_url": core_url, # needed to count visited places and the count associated with them
         "word_count": total_words
     }
     json_entry_buffer.append(json_entry)
@@ -163,7 +167,7 @@ def log_data(url, resp):
     if len(json_entry_buffer) > BUFFER_DUMP_SIZE:
         flush_buffer()
 
-def process_words(url, resp):
+def process_words(resp):
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
         
     for tag in soup(_NON_TEXT_TAGS):
@@ -209,11 +213,9 @@ def is_valid_host(host: str) -> bool:
 
     return False
 
-def get_top_50_words():
-    word_freq_tuples = list(word_freq.items())
-
-    top_50 = sorted(word_freq_tuples, key=lambda x: x[1], reverse=True)[:50]
-    return top_50
+def get_top_50_words(words_counter):
+    top_50_tuples = sorted(list(words_counter.items()), key=lambda x: x[1], reverse=True)[:50]
+    return top_50_tuples
 
 # endregion
 
@@ -353,11 +355,31 @@ def is_valid(url):
 def make_report():
     flush_buffer()
 
-    with open("crawl_results.json") as f_cr:
-        data = json.load(f_cr)
 
-        with open("report.txt", "w") as f_r:
-            ...
+    with open("crawl_results.json") as file_cr:
+        file_data = json.load(file_cr)
+        top_50_words = get_top_50_words(file_data["words_counter"])
+        # file_data["url_info"] is an array of entries
+        largest_page = max(file_data["url_info"],  key=lambda x: x["word_count"])
+
+        host_and_core_urls = {}
+        for item in file_data["url_info"]:
+            core_url = item["core_url"]
+            host = core_url.split("/", 1)[0] # gets only the host
+            host_and_core_urls[host] = host_and_core_urls.get(host, set())
+            host_and_core_urls[host].add(core_url)
+
+        with open("report.txt", "w") as file_report:
+            file_report.write(f"Total pages visited: {len(file_data['url_info'])}\n\n")
+            file_report.write(f"Longest page: {largest_page['url']},\t{largest_page['word_count']} words\n\n")
+
+            file_report.write(f"Unique subdomains visited: {len(host_and_core_urls)}\n\n")
+            file_report.write("List of subdomains and the amount of pages in them\n")
+            for i, (host, core_urls) in enumerate(host_and_core_urls.items()):
+                file_report.write(f"{i + 1}.\t{host}\n\twas visited {len(core_urls)} times\n")
+            file_report.write("\n\nTop 50 words\n")
+            for i, (word, count) in enumerate(top_50_words):
+                file_report.write(f"\t{i + 1}. {word}:\t{count}\n")
 
     pass
 # endregion
