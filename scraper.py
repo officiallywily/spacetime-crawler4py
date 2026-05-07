@@ -44,7 +44,17 @@ _DISALLOWED_QUERY_PARAMS = {
     "idx",
     "image",
     "tab_files",
-    "ns"
+    "ns",
+    "share",
+    "sort",
+    "orderby",
+    "order",
+    "view",
+    "lang",
+    "skin",
+    "replyto",
+    "print",
+    "format"
 }
 _CALENDAR_WORDS = {
     "year",
@@ -60,7 +70,9 @@ _DISALLOWED_PATHS = {
     "calendar",
     "login",
     "requesttracker",
-    "dtr"
+    "dtr",
+    "accounts",
+    "services"
 }
 _ADDITIONAL_STOP_WORDS = {
     "nt",
@@ -108,10 +120,10 @@ _NON_TEXT_TAGS = ["script", "style", "iframe", "noscript", "svg", "canvas", "hea
 CALENDAR_WORD_LIMIT = 2
 MAX_QUERY_PARAMS = 4
 MAX_QUERY_LENGTH = 200
-MAX_PATH_SEGMENTS = 15
+MAX_PATH_SEGMENTS = 7
 MAX_URL_LENGTH = 1000
-MAX_VISITS_PER_PAGE = 200 # default to 200. testing with lower values to make crawler end faster
-BUFFER_DUMP_SIZE = 2000 # default to 2000. testing with lower values to make crawlse end faster
+MAX_VISITS_PER_PAGE = 5 # default to 200. testing with lower values to make crawler end faster
+BUFFER_DUMP_SIZE = 2000 # default to 2000. testing with lower values to make crawler end faster
 #endregion
 
 
@@ -318,7 +330,7 @@ def is_valid(url):
         if any(bad_path in parsed.path.lower() for bad_path in _DISALLOWED_PATHS):
             return False
 
-        path_segments = parsed.path.split('/')
+        path_segments = re.split(r'[:/]', parsed.path) 
 
         path_dict = {}
         for segment in path_segments:
@@ -411,5 +423,4 @@ def make_report():
             for i, (word, count) in enumerate(top_50_words):
                 file_report.write(f"\t{i + 1}. {word}:\t{count}\n")
 
-    pass
 # endregion

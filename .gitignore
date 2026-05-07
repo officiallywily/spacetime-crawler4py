@@ -114,3 +114,7 @@ venv.bak/
 output.txt
 practice and testing/
 .DS_Store
+test.json
+test.py
+crawl_results*.*
+backups/
