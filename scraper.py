@@ -42,7 +42,8 @@ _DISALLOWED_QUERY_PARAMS = {
     "action",
     "do",
     "idx",
-    "image"
+    "image",
+    "tab_files"
 }
 _CALENDAR_WORDS = {
     "year",
@@ -56,6 +57,7 @@ _CALENDAR_WORDS = {
 _DISALLOWED_PATHS = {
     "events",
     "calendar",
+    "login"
 }
 _ADDITIONAL_STOP_WORDS = {
     "nt",
@@ -85,6 +87,9 @@ _ADDITIONAL_STOP_WORDS = {
     "navigation",
     "view",
     "history",
+    "support",
+    "username",
+    "password",
     "support"
 }
 _NON_TEXT_TAGS = ["script", "style", "iframe", "noscript", "svg", "canvas", "head", "title", "meta"]
@@ -106,7 +111,6 @@ unique_pages_set = set()
 visited_counter = {} # for trap avoiding
 json_entry_buffer = [] # to limit io operations as much as possible
 word_counter_buffer = {}
-unique_urls_set = set()
 # endregion
 
 # region Helpers
