@@ -91,7 +91,8 @@ MAX_QUERY_PARAMS = 4
 MAX_QUERY_LENGTH = 200
 MAX_PATH_SEGMENTS = 15
 MAX_URL_LENGTH = 1000
-MAX_VISITS_PER_URL = 10000
+MAX_VISITS_PER_PAGE = 2000
+BUFFER_DUMP_SIZE = 2000
 #endregion
 
 
@@ -99,7 +100,9 @@ MAX_VISITS_PER_URL = 10000
 unique_urls_set = set()
 largest_page = ("", 0) #tuple of (url, count)
 unique_pages_set = set()
-subdomain_counter = {}
+visited_counter = {} # for trap avoiding
+json_entry_buffer = [] # to limit io operations as much as possible
+word_counter_buffer = {}
 # endregion
 
 # region Helpers
@@ -109,25 +112,58 @@ def can_crawl(resp) -> bool:
 
 # just write into a json file for every valid url that we visit and process
 # { url: string, core_url: string, num_words: int, words: list of words }
+# from https://www.geeksforgeeks.org/python/append-to-json-file-using-python/
+def update_json():
+    global json_entry_buffer
+
+    with open("crawl_results.json", 'r+') as file:
+        file_data = json.load(file) or {}
+        file_data["url_info"] = file_data.get("url_info", [])
+        file_data["url_info"].extend(json_entry_buffer)
+        file_data["words_counter"] = file_data.get("words_counter", {})
+        file_data["words_counter"] = combine_counters(file_data["words_counter"], word_counter_buffer)
+        file.seek(0)
+        json.dump(file_data, file, indent=4)
+        file.truncate() # to prevent extra bytes leftover
+
+def combine_counters(counter1, counter2):
+    for key, value in counter2.items():
+        counter1[key] = counter1.get(key, 0) + value
+    
+    return counter1
+
+def flush_buffer():
+    if json_entry_buffer:
+        update_json()
+        json_entry_buffer.clear()
+        word_counter_buffer.clear()
+
+
 def log_data(url, resp):
+    global json_entry_buffer
 
     if not is_valid(url) or not can_crawl(resp):
         return
 
-    core_url = get_formatted_url(url) #core_url is the host + path
-    total_words, valid_word_count_dict = get_formatted_words(url, resp)
+    core_url = get_core_url(url) #core_url is the host + path
+    if "wiki" in core_url: # wiki gets a bigger allowance since it's okay for wiki to have a lot of pages
+        visited_counter[core_url] = visited_counter.get(core_url, 0) + 1
+    else:
+        visited_counter[core_url] = visited_counter.get(core_url, 0) + 2
+        
+    total_words = process_words(url, resp)
 
-    with open("crawl_results.json", "a") as f:
-        json = {
-            "url": url,
-            "core_url": core_url,
-            "word_count": total_words,
-            "words": valid_word_count_dict
-        }
-        json.dump(json, f)
+    json_entry = {
+        "url": url,
+        "core_url": core_url,
+        "word_count": total_words
+    }
+    json_entry_buffer.append(json_entry)
 
+    if len(json_entry_buffer) > BUFFER_DUMP_SIZE:
+        flush_buffer()
 
-def get_formatted_words(url, resp):
+def process_words(url, resp):
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
         
     for tag in soup(_NON_TEXT_TAGS):
@@ -137,21 +173,18 @@ def get_formatted_words(url, resp):
     words = re.findall(r'[a-z]+', text)
 
     total_words = len(words)
-    valid_word_count_dict = {}
 
+    # handling buffer
     for w in words:
-        if w not in ENGLISH_STOP_WORDS or w not in _ADDITIONAL_STOP_WORDS:
-            valid_word_count_dict[w] = valid_word_count_dict.get(w, 0) + 1
+        if w not in ENGLISH_STOP_WORDS and w not in _ADDITIONAL_STOP_WORDS:
+            word_counter_buffer[w] = word_counter_buffer.get(w, 0) + 1
         
-    return total_words, valid_word_count_dict
+    return total_words
 
-def get_formatted_url(url):
-
-    if not is_valid(url):
-        return
+def get_core_url(url):
 
     parsed = urlparse(url)
-    host = parsed.hostname.lower()
+    host = (parsed.hostname or "").lower()
     path = parsed.path or "/"
     if not path.endswith('/'):
         path = path + '/'
@@ -159,13 +192,10 @@ def get_formatted_url(url):
 
     return full_page
 
-def is_valid_page(url):
-    core_url = get_formatted_url(url)
-    times_visited = subdomain_counter.get(core_url, 0)
-    if times_visited > MAX_VISITS_PER_URL:
-        return False
-    
-    return True
+def visits_exceeded(url):
+    core_url = get_core_url(url)
+    times_visited = visited_counter.get(core_url, 0)
+    return times_visited > MAX_VISITS_PER_PAGE
 
 def is_valid_host(host: str) -> bool:
     if not host:
@@ -189,6 +219,8 @@ def get_top_50_words():
 
 # region main functions
 def scraper(url, resp):
+    if visits_exceeded(url):
+        return []
     # valid response -> get the url counted in subdomains
     log_data(url, resp)
     links = extract_next_links(url, resp)
@@ -319,6 +351,8 @@ def is_valid(url):
         raise
 
 def make_report():
+    flush_buffer()
+
     with open("crawl_results.json") as f_cr:
         data = json.load(f_cr)
 
