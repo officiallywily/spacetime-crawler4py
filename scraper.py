@@ -92,7 +92,7 @@ MAX_QUERY_LENGTH = 200
 MAX_PATH_SEGMENTS = 15
 MAX_URL_LENGTH = 1000
 MAX_VISITS_PER_PAGE = 50 # default to 200. testing with lower values to make crawler end faster
-BUFFER_DUMP_SIZE = 20 # default to 2000. testing with lower values to make crawlse end faster
+BUFFER_DUMP_SIZE = 200 # default to 2000. testing with lower values to make crawlse end faster
 #endregion
 
 
@@ -180,7 +180,10 @@ def process_words(resp):
 
     # handling buffer
     for w in words:
-        if w not in ENGLISH_STOP_WORDS and w not in _ADDITIONAL_STOP_WORDS:
+        if (w not in ENGLISH_STOP_WORDS 
+        and w not in _ADDITIONAL_STOP_WORDS 
+        and len(w) > 1
+        and not w.isadigit()):
             word_counter_buffer[w] = word_counter_buffer.get(w, 0) + 1
         
     return total_words
