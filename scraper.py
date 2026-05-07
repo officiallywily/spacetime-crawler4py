@@ -123,7 +123,7 @@ MAX_QUERY_LENGTH = 200
 MAX_PATH_SEGMENTS = 7
 MAX_URL_LENGTH = 1000
 MAX_VISITS_PER_PAGE = 5 # default to 200. testing with lower values to make crawler end faster
-BUFFER_DUMP_SIZE = 2000 # default to 2000. testing with lower values to make crawler end faster
+BUFFER_DUMP_SIZE = 1000 # default to 2000. testing with lower values to make crawler end faster
 #endregion
 
 
@@ -276,22 +276,30 @@ def extract_next_links(url, resp):
 
     base_url = resp.url if resp.url else url
     for element in soup.find_all('a', href = True):
-        raw_url = element.get('href')
-        stripped_url = raw_url.strip()
-        stripped_url_lowered = stripped_url.lower() 
+        try:
+            raw_url = element.get('href')
+            stripped_url = raw_url.strip()
+            stripped_url_lowered = stripped_url.lower() 
         
-        if (stripped_url_lowered == "" 
-            or stripped_url_lowered[0] == "#"
-            or stripped_url_lowered.startswith("tel:")
-            or stripped_url_lowered.startswith("mailto:")
-            or stripped_url_lowered.startswith("sms:")
-            or stripped_url_lowered.startswith("javascript:")):
+            if (stripped_url_lowered == "" 
+                or stripped_url_lowered[0] == "#"
+                or stripped_url_lowered.startswith("tel:")
+                or stripped_url_lowered.startswith("mailto:")
+                or stripped_url_lowered.startswith("sms:")
+                or stripped_url_lowered.startswith("javascript:")):
+                 
+                continue
+            
+            full_url = urljoin(base_url, stripped_url)
+            clean_url = full_url.split('#')[0] # defragmenting
+            urls.append(clean_url)
+        
+        except(ValueError, Exception) as e:
+            print(f"Skipping malformed link {raw_url}: {e}")
             continue
-        
-        full_url = urljoin(base_url, stripped_url)
-        clean_url = full_url.split('#')[0] # defragmenting
 
-        urls.append(clean_url)
+
+
 
 
 
