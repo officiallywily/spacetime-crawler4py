@@ -3,39 +3,9 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+from math import inf
 
-# logging... 
-# total unique pages
-#   use a set and add to the set on every VALID page visit WITHOUT FRAGMENT
-# page with most words: keep track of 
-#   "most_words_page" dictionary:
-#   { url: FULL_URL (string) , word_count: (int) }
-#   everytime we crawl a page, keep accumulate the number of words 
-#   and chck against most_word_page.word_count value. 
-#   update as needed
-# 50 most common words found
-#   use a hash table where keys are all the NON-STOP WORD words seen (lowercase)
-#   and values are the count.
-#   every single word the crawler sees will be accounted for
-#   to sort:
-#   convert hash table into a list of tuples [(word, count)]
-#   run a sorting algorithm on the count
-#   Get the top 50 words and their count
-#
-# number of subdomains and the amount of each listed alphabetically
-#   treat http and https as the same subdomain.
-#   treat www.example.com and example.com as different subdomains
-#   treat example.com/ and example.com/?randomquery the same subdomain & page (ignore queries)
-#   basically only keep subdomain + domain + path as unique page. Trim everything else
-#   use hash table: {subdomain: subdomain + domain}
-#   increment each subdomain each time it's visited
-#   turn into list of tuples and sort by alphabetical order
-
-# also need persistence on shutoff of crawler. Maybe I should program it to output 
-# the data into a json file on shut off. load in from json file on start as long as 
-# frontier is empty. if frontier is empty on start, i should wipe the logged file 
-
-# constants
+# region Constants
 _ALLOWED_SUBDOMAINS = (
     ".ics.uci.edu",
     ".cs.uci.edu",
@@ -70,59 +40,73 @@ _DISALLOWED_PATHS = {
     "calendar",
 }
 _NON_TEXT_TAGS = ["script", "style", "iframe", "noscript", "svg", "canvas", "head", "title", "meta"]
+_PUNCTUATION_TO_STRIP = {'.', ',', '!', '?', '"'}
 
 CALENDAR_WORD_LIMIT = 2
 MAX_QUERY_PARAMS = 4
 MAX_QUERY_LENGTH = 200
 MAX_PATH_SEGMENTS = 15
 MAX_URL_LENGTH = 1000
+#endregion
 
 
-# global variables
+# region Global Variables
 unique_urls_set = set()
 largest_page = ("", 0) #tuple of (url, count)
 unique_pages_set = set()
 subdomain_count = {}
 word_freq = {}
+# endregion
 
-# helpers
+# region Helpers
 
 def can_crawl(resp) -> bool:
     return resp.status == 200 and resp.raw_response and resp.raw_response.content
-def update_data(url, resp):
+
+def process_data(url, resp):
+
     if not is_valid(url) or not can_crawl(resp):
         return
-    
-    increment_subdomain_count(url)
-    soup = BeautifulSoup(resp.raw_response.content, "lxml")
-    process_page_words(url, soup)
 
-def process_page_words(url, soup):
+    process_page(url)
+    process_page_words(url, resp)
+
+def process_page_words(url, resp):
     global largest_page
     global word_freq
 
+    soup = BeautifulSoup(resp.raw_response.content, "lxml")
+        
     for tag in soup(_NON_TEXT_TAGS):
         tag.decompose()
     
     text = soup.get_text(separator=" ", strip=True).lower()
-    words = text.split()
+    words = re.findall(r'[a-zA-Z]+', text)
 
     total_words = len(words)
 
     if total_words > largest_page[1]:
-        largest_page = (url, total_words)
+        with open("MyLogs/max_words.txt", "w") as f:
+            largest_page = (url, total_words)
+            f.write(f"{url} {total_words}")
 
     for w in words:
+        if w[-1] in _PUNCTUATION_TO_STRIP:
+            w = w[:-1]
+        if len(w) == 0:
+            continue
         if w not in ENGLISH_STOP_WORDS:
             word_freq[w] = word_freq.get(w, 0) + 1
 
-def increment_subdomain_count(url):
+def process_page(url):
     global unique_pages_set
     global subdomain_count
 
     if not is_valid(url):
         return
-    
+
+
+
     parsed = urlparse(url)
     host = parsed.hostname.lower()
     path = parsed.path or "/"
@@ -146,15 +130,18 @@ def is_valid_host(host: str) -> bool:
     
     return False
 
+def get_top_50_words():
+    word_freq_tuples = list(word_freq.items())
 
-# https://www.iquanti.com/blog/guide-seo-spider-traps-causes-solutions/ helps a lot
-# https://www.conductor.com/academy/crawler-traps/
-# because i missed the testing due date, i am building the crawler a bit blind, and
-# trying to make it very robust. adklsfjlkadsfjkldasjfkldasjfkladjslkfjaslkfjdslakjfdl
+    top_50 = sorted(word_freq_tuples, key=lambda x: x[1], reverse=True)[:50]
+    return top_50
 
+# endregion
+
+# region main functions
 def scraper(url, resp):
     # valid response -> get the url counted in subdomains
-    update_data(url, resp)
+    process_data(url, resp)
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
@@ -281,3 +268,5 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
+# endregion
