@@ -58,7 +58,9 @@ _CALENDAR_WORDS = {
 _DISALLOWED_PATHS = {
     "events",
     "calendar",
-    "login"
+    "login",
+    "requesttracker",
+    "dtr"
 }
 _ADDITIONAL_STOP_WORDS = {
     "nt",
@@ -91,7 +93,15 @@ _ADDITIONAL_STOP_WORDS = {
     "support",
     "username",
     "password",
-    "support"
+    "support",
+    "certification",
+    "share",
+    "spring",
+    "summer",
+    "fall",
+    "winter",
+    "autumn",
+    "quarter"
 }
 _NON_TEXT_TAGS = ["script", "style", "iframe", "noscript", "svg", "canvas", "head", "title", "meta"]
 
@@ -301,7 +311,10 @@ def is_valid(url):
         # or /about/people/about/people/about/...
         # checking for paths that are longer than 15 segments (just a rough number i chose)
         # also check path
-
+        # Inside is_valid(url):
+        if re.search(r"/\d{5,}/?$", parsed.path) or re.search(r":\d{5,}/?$", parsed.path):
+            return False
+            
         if any(bad_path in parsed.path.lower() for bad_path in _DISALLOWED_PATHS):
             return False
 
