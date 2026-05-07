@@ -40,6 +40,9 @@ _DISALLOWED_QUERY_PARAMS = {
     "phpsessid",
     "jsessionid",
     "action",
+    "do",
+    "idx",
+    "image"
 }
 _CALENDAR_WORDS = {
     "year",
@@ -82,6 +85,7 @@ _ADDITIONAL_STOP_WORDS = {
     "navigation",
     "view",
     "history",
+    "support"
 }
 _NON_TEXT_TAGS = ["script", "style", "iframe", "noscript", "svg", "canvas", "head", "title", "meta"]
 
@@ -90,8 +94,8 @@ MAX_QUERY_PARAMS = 4
 MAX_QUERY_LENGTH = 200
 MAX_PATH_SEGMENTS = 15
 MAX_URL_LENGTH = 1000
-MAX_VISITS_PER_PAGE = 50 # default to 200. testing with lower values to make crawler end faster
-BUFFER_DUMP_SIZE = 200 # default to 2000. testing with lower values to make crawlse end faster
+MAX_VISITS_PER_PAGE = 200 # default to 200. testing with lower values to make crawler end faster
+BUFFER_DUMP_SIZE = 2000 # default to 2000. testing with lower values to make crawlse end faster
 #endregion
 
 
@@ -102,6 +106,7 @@ unique_pages_set = set()
 visited_counter = {} # for trap avoiding
 json_entry_buffer = [] # to limit io operations as much as possible
 word_counter_buffer = {}
+unique_urls_set = set()
 # endregion
 
 # region Helpers
@@ -145,9 +150,14 @@ def flush_buffer():
 
 def log_data(url, resp):
     global json_entry_buffer
+    global unique_pages_set
 
     if not is_valid(url) or not can_crawl(resp):
         return
+    
+    if url in unique_pages_set:
+        return
+    unique_pages_set.add(url)
 
     core_url = get_core_url(url) #core_url is the host + path
     if "wiki" in core_url: # wiki gets a bigger allowance since it's okay for wiki to have a lot of pages
@@ -182,7 +192,7 @@ def process_words(resp):
         if (w not in ENGLISH_STOP_WORDS 
         and w not in _ADDITIONAL_STOP_WORDS 
         and len(w) > 1
-        and not w.isadigit()):
+        and not w.isdigit()):
             word_counter_buffer[w] = word_counter_buffer.get(w, 0) + 1
         
     return total_words
