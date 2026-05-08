@@ -1,246 +1,337 @@
-Total pages visited: 7566
+Total pages visited: 7286
 
-Longest page: https://grape.ics.uci.edu/wiki/asterix/raw-attachment/wiki/stats170ab-2018/visualization_with_iris_data.ipynb,	144240 words
+Longest page: http://www.ics.uci.edu/~cs224
+	78184 words
 
-Unique subdomains visited: 93
+Unique subdomains visited: 92
 
 List of subdomains and the amount of pages in them
 1.	accessibility.ics.uci.edu
-	has 6 unique pages
+		pages: 6
+		paths: 6
 2.	acoi.ics.uci.edu
-	has 112 unique pages
+		pages: 112
+		paths: 112
 3.	archive-beta.ics.uci.edu
-	has 7 unique pages
+		pages: 7
+		paths: 7
 4.	archive.ics.uci.edu
-	has 30 unique pages
+		pages: 32
+		paths: 30
 5.	asterix.ics.uci.edu
-	has 7 unique pages
+		pages: 7
+		paths: 7
 6.	bit.ics.uci.edu
-	has 1 unique pages
+		pages: 1
+		paths: 1
 7.	cert.ics.uci.edu
-	has 26 unique pages
+		pages: 28
+		paths: 26
 8.	checkin.ics.uci.edu
-	has 8 unique pages
+		pages: 8
+		paths: 8
 9.	chenli.ics.uci.edu
-	has 10 unique pages
+		pages: 10
+		paths: 10
 10.	cloudberry.ics.uci.edu
-	has 5 unique pages
+		pages: 6
+		paths: 5
 11.	cml.ics.uci.edu
-	has 200 unique pages
+		pages: 237
+		paths: 200
 12.	code.ics.uci.edu
-	has 13 unique pages
+		pages: 13
+		paths: 13
 13.	computableplant.ics.uci.edu
-	has 94 unique pages
+		pages: 90
+		paths: 84
 14.	containers.ics.uci.edu
-	has 1 unique pages
+		pages: 1
+		paths: 1
 15.	courselisting.ics.uci.edu
-	has 3 unique pages
+		pages: 4
+		paths: 3
 16.	create.ics.uci.edu
-	has 4 unique pages
+		pages: 4
+		paths: 4
 17.	cs.ics.uci.edu
-	has 10 unique pages
+		pages: 10
+		paths: 10
 18.	cs.uci.edu
-	has 1 unique pages
+		pages: 1
+		paths: 1
 19.	dgillen.ics.uci.edu
-	has 32 unique pages
+		pages: 32
+		paths: 32
 20.	ds4all.ics.uci.edu
-	has 9 unique pages
+		pages: 9
+		paths: 9
 21.	duttgroup.ics.uci.edu
-	has 116 unique pages
+		pages: 116
+		paths: 116
 22.	dynamo.ics.uci.edu
-	has 33 unique pages
+		pages: 31
+		paths: 31
 23.	edgelab.ics.uci.edu
-	has 7 unique pages
+		pages: 7
+		paths: 7
 24.	elms.ics.uci.edu
-	has 2 unique pages
+		pages: 2
+		paths: 2
 25.	emj.ics.uci.edu
-	has 34 unique pages
+		pages: 34
+		paths: 32
 26.	evoke.ics.uci.edu
-	has 4 unique pages
+		pages: 4
+		paths: 4
 27.	fellowships.ics.uci.edu
-	has 2 unique pages
+		pages: 2
+		paths: 2
 28.	flamingo.ics.uci.edu
-	has 13 unique pages
+		pages: 17
+		paths: 13
 29.	fr.ics.uci.edu
-	has 3 unique pages
+		pages: 3
+		paths: 3
 30.	futurehealth.ics.uci.edu
-	has 118 unique pages
+		pages: 118
+		paths: 118
 31.	gitlab.ics.uci.edu
-	has 3 unique pages
+		pages: 3
+		paths: 3
 32.	gradinfo.ics.uci.edu
-	has 2 unique pages
+		pages: 2
+		paths: 2
 33.	grape.ics.uci.edu
-	has 502 unique pages
+		pages: 304
+		paths: 304
 34.	graphics.ics.uci.edu
-	has 1 unique pages
+		pages: 1
+		paths: 1
 35.	hack.ics.uci.edu
-	has 1 unique pages
+		pages: 1
+		paths: 1
 36.	helpdesk.ics.uci.edu
-	has 1 unique pages
+		pages: 3
+		paths: 1
 37.	hobbes.ics.uci.edu
-	has 11 unique pages
+		pages: 10
+		paths: 10
 38.	hpi.ics.uci.edu
-	has 5 unique pages
+		pages: 5
+		paths: 5
 39.	hub.ics.uci.edu
-	has 4 unique pages
+		pages: 4
+		paths: 4
 40.	i-sensorium.ics.uci.edu
-	has 5 unique pages
-41.	iasl.ics.uci.edu
-	has 1 unique pages
-42.	icde2023.ics.uci.edu
-	has 46 unique pages
-43.	ics.uci.edu
-	has 996 unique pages
-44.	industryshowcase.ics.uci.edu
-	has 24 unique pages
-45.	informatics.ics.uci.edu
-	has 27 unique pages
-46.	informatics.uci.edu
-	has 7 unique pages
-47.	intranet.ics.uci.edu
-	has 14 unique pages
-48.	ipubmed.ics.uci.edu
-	has 1 unique pages
-49.	isg.ics.uci.edu
-	has 226 unique pages
-50.	jgarcia.ics.uci.edu
-	has 1 unique pages
-51.	julia-hub.ics.uci.edu
-	has 2 unique pages
-52.	luci.ics.uci.edu
-	has 4 unique pages
-53.	mailman.ics.uci.edu
-	has 38 unique pages
-54.	malek.ics.uci.edu
-	has 1 unique pages
-55.	mcs.ics.uci.edu
-	has 12 unique pages
-56.	mdogucu.ics.uci.edu
-	has 1 unique pages
-57.	mds.ics.uci.edu
-	has 8 unique pages
-58.	mhcid.ics.uci.edu
-	has 19 unique pages
-59.	mswe.ics.uci.edu
-	has 10 unique pages
-60.	myip.ics.uci.edu
-	has 1 unique pages
-61.	nalini.ics.uci.edu
-	has 7 unique pages
-62.	netreg.ics.uci.edu
-	has 2 unique pages
-63.	ngs.ics.uci.edu
-	has 1962 unique pages
-64.	oai.ics.uci.edu
-	has 6 unique pages
-65.	psearch.ics.uci.edu
-	has 1 unique pages
-66.	radicle.ics.uci.edu
-	has 1 unique pages
-67.	riscit.ics.uci.edu
-	has 1 unique pages
-68.	scale.ics.uci.edu
-	has 7 unique pages
-69.	seal.ics.uci.edu
-	has 48 unique pages
-70.	sherlock.ics.uci.edu
-	has 7 unique pages
-71.	signage.ics.uci.edu
-	has 2 unique pages
-72.	speedtest.ics.uci.edu
-	has 1 unique pages
-73.	staging-hub.ics.uci.edu
-	has 2 unique pages
-74.	stairs.ics.uci.edu
-	has 3 unique pages
-75.	stat.ics.uci.edu
-	has 11 unique pages
-76.	stat.uci.edu
-	has 2 unique pages
-77.	summeracademy.ics.uci.edu
-	has 12 unique pages
-78.	support.ics.uci.edu
-	has 7 unique pages
-79.	swiki.ics.uci.edu
-	has 136 unique pages
-80.	tad.ics.uci.edu
-	has 2 unique pages
-81.	tastier.ics.uci.edu
-	has 1 unique pages
-82.	tutoring.ics.uci.edu
-	has 5 unique pages
-83.	unite.ics.uci.edu
-	has 10 unique pages
-84.	vision.ics.uci.edu
-	has 212 unique pages
-85.	wics.ics.uci.edu
-	has 231 unique pages
-86.	wiki.ics.uci.edu
-	has 671 unique pages
-87.	www-db.ics.uci.edu
-	has 25 unique pages
-88.	www.cs.uci.edu
-	has 3 unique pages
-89.	www.ics.uci.edu
-	has 1152 unique pages
-90.	www.informatics.ics.uci.edu
-	has 6 unique pages
-91.	www.informatics.uci.edu
-	has 17 unique pages
-92.	www.stat.uci.edu
-	has 5 unique pages
-93.	xtune.ics.uci.edu
-	has 6 unique pages
+		pages: 5
+		paths: 5
+41.	icde2023.ics.uci.edu
+		pages: 46
+		paths: 46
+42.	ics.uci.edu
+		pages: 1003
+		paths: 993
+43.	industryshowcase.ics.uci.edu
+		pages: 24
+		paths: 24
+44.	informatics.ics.uci.edu
+		pages: 27
+		paths: 27
+45.	informatics.uci.edu
+		pages: 7
+		paths: 7
+46.	intranet.ics.uci.edu
+		pages: 14
+		paths: 14
+47.	ipubmed.ics.uci.edu
+		pages: 1
+		paths: 1
+48.	isg.ics.uci.edu
+		pages: 226
+		paths: 226
+49.	jgarcia.ics.uci.edu
+		pages: 3
+		paths: 1
+50.	julia-hub.ics.uci.edu
+		pages: 2
+		paths: 2
+51.	luci.ics.uci.edu
+		pages: 4
+		paths: 4
+52.	mailman.ics.uci.edu
+		pages: 38
+		paths: 38
+53.	malek.ics.uci.edu
+		pages: 1
+		paths: 1
+54.	mcs.ics.uci.edu
+		pages: 12
+		paths: 12
+55.	mdogucu.ics.uci.edu
+		pages: 1
+		paths: 1
+56.	mds.ics.uci.edu
+		pages: 8
+		paths: 8
+57.	mhcid.ics.uci.edu
+		pages: 19
+		paths: 19
+58.	mswe.ics.uci.edu
+		pages: 10
+		paths: 10
+59.	myip.ics.uci.edu
+		pages: 1
+		paths: 1
+60.	nalini.ics.uci.edu
+		pages: 7
+		paths: 7
+61.	netreg.ics.uci.edu
+		pages: 3
+		paths: 2
+62.	ngs.ics.uci.edu
+		pages: 1964
+		paths: 1962
+63.	oai.ics.uci.edu
+		pages: 6
+		paths: 6
+64.	psearch.ics.uci.edu
+		pages: 1
+		paths: 1
+65.	radicle.ics.uci.edu
+		pages: 1
+		paths: 1
+66.	riscit.ics.uci.edu
+		pages: 1
+		paths: 1
+67.	scale.ics.uci.edu
+		pages: 7
+		paths: 7
+68.	seal.ics.uci.edu
+		pages: 44
+		paths: 44
+69.	sherlock.ics.uci.edu
+		pages: 7
+		paths: 7
+70.	signage.ics.uci.edu
+		pages: 2
+		paths: 2
+71.	speedtest.ics.uci.edu
+		pages: 1
+		paths: 1
+72.	staging-hub.ics.uci.edu
+		pages: 2
+		paths: 2
+73.	stairs.ics.uci.edu
+		pages: 3
+		paths: 3
+74.	stat.ics.uci.edu
+		pages: 11
+		paths: 11
+75.	stat.uci.edu
+		pages: 2
+		paths: 2
+76.	summeracademy.ics.uci.edu
+		pages: 12
+		paths: 12
+77.	support.ics.uci.edu
+		pages: 7
+		paths: 7
+78.	swiki.ics.uci.edu
+		pages: 137
+		paths: 136
+79.	tad.ics.uci.edu
+		pages: 2
+		paths: 2
+80.	tastier.ics.uci.edu
+		pages: 1
+		paths: 1
+81.	tutoring.ics.uci.edu
+		pages: 5
+		paths: 5
+82.	unite.ics.uci.edu
+		pages: 10
+		paths: 10
+83.	vision.ics.uci.edu
+		pages: 212
+		paths: 212
+84.	wics.ics.uci.edu
+		pages: 231
+		paths: 231
+85.	wiki.ics.uci.edu
+		pages: 672
+		paths: 671
+86.	www-db.ics.uci.edu
+		pages: 23
+		paths: 23
+87.	www.cs.uci.edu
+		pages: 3
+		paths: 3
+88.	www.ics.uci.edu
+		pages: 1138
+		paths: 1106
+89.	www.informatics.ics.uci.edu
+		pages: 6
+		paths: 6
+90.	www.informatics.uci.edu
+		pages: 17
+		paths: 17
+91.	www.stat.uci.edu
+		pages: 5
+		paths: 5
+92.	xtune.ics.uci.edu
+		pages: 6
+		paths: 6
 
 
 Top 50 words
-	1. ics:	16189
-	2. research:	14237
+	1. ics:	15975
+	2. research:	14207
 	3. ramesh:	11575
-	4. uci:	10943
-	5. data:	10846
-	6. information:	10381
-	7. computer:	9976
-	8. students:	8425
-	9. current:	8276
-	10. university:	7601
-	11. computing:	7384
-	12. learning:	7165
-	13. science:	6970
-	14. values:	6813
-	15. jain:	6594
-	16. past:	6503
-	17. news:	6492
-	18. insert:	6492
-	19. systems:	6366
-	20. edu:	6280
-	21. irvine:	5969
-	22. software:	5957
-	23. read:	5911
-	24. events:	5699
-	25. project:	5596
-	26. access:	5269
-	27. new:	5201
-	28. time:	5175
-	29. courses:	5043
-	30. people:	4939
-	31. pdf:	4855
-	32. projects:	4758
-	33. books:	4521
-	34. companies:	4420
-	35. models:	4143
-	36. machine:	4084
-	37. theme:	4028
-	38. favorite:	4016
-	39. vision:	3988
-	40. home:	3943
-	41. group:	3932
-	42. experiential:	3861
-	43. based:	3849
-	44. student:	3830
-	45. use:	3812
-	46. management:	3655
-	47. intent:	3555
-	48. dechter:	3521
-	49. social:	3435
-	50. multimedia:	3421
+	4. uci:	10775
+	5. data:	10534
+	6. information:	10273
+	7. computer:	9911
+	8. students:	8417
+	9. current:	8264
+	10. university:	7558
+	11. computing:	7365
+	12. learning:	7130
+	13. science:	6929
+	14. jain:	6594
+	15. news:	6454
+	16. past:	6425
+	17. systems:	6343
+	18. edu:	6070
+	19. software:	5914
+	20. read:	5836
+	21. irvine:	5673
+	22. events:	5619
+	23. project:	5485
+	24. courses:	5038
+	25. new:	4969
+	26. time:	4867
+	27. people:	4806
+	28. projects:	4755
+	29. pdf:	4666
+	30. access:	4629
+	31. books:	4501
+	32. companies:	4418
+	33. models:	4125
+	34. machine:	4062
+	35. theme:	4027
+	36. favorite:	4015
+	37. vision:	3985
+	38. group:	3900
+	39. experiential:	3861
+	40. student:	3825
+	41. based:	3819
+	42. home:	3750
+	43. management:	3646
+	44. use:	3553
+	45. social:	3429
+	46. multimedia:	3418
+	47. services:	3401
+	48. school:	3377
+	49. dechter:	3315
+	50. system:	3307
