@@ -410,30 +410,52 @@ def is_valid(url):
 def make_report():
     flush_buffer()
 
-
     with open("crawl_results.json") as file_cr:
         file_data = json.load(file_cr)
-        top_50_words = get_top_50_words(file_data["words_counter"])
-        # file_data["url_info"] is an array of entries
-        largest_page = max(file_data["url_info"],  key=lambda x: x["word_count"])
+        total_pages, largest_page, top_50_words, subdomain_metrics = format_data_for_report(file_data)
 
-        host_and_core_urls = {}
-        for item in file_data["url_info"]:
-            core_url = item["core_url"]
-            host = core_url.split("/", 1)[0] # gets only the host
-            host_and_core_urls[host] = host_and_core_urls.get(host, set())
-            host_and_core_urls[host].add(core_url)
-
-        with open("report.txt", "w") as file_report:
-            file_report.write(f"Total pages visited: {len(file_data['url_info'])}\n\n")
-            file_report.write(f"Longest page: {largest_page['url']},\t{largest_page['word_count']} words\n\n")
-
-            file_report.write(f"Unique subdomains visited: {len(host_and_core_urls)}\n\n")
-            file_report.write("List of subdomains and the amount of pages in them\n")
-            for i, (host, core_urls) in enumerate(sorted(host_and_core_urls.items(), key=lambda x: x[0])):
-                file_report.write(f"{i + 1}.\t{host}\n\thas {len(core_urls)} unique pages\n")
-            file_report.write("\n\nTop 50 words\n")
-            for i, (word, count) in enumerate(top_50_words):
-                file_report.write(f"\t{i + 1}. {word}:\t{count}\n")
+    with open("report.txt", "w") as file_report:
+        write_report(file_report, total_pages, largest_page, top_50_words, subdomain_metrics)
 
 # endregion
+def write_report(f, total_pages, largest_page, top_50_words, subdomain_metrics): 
+    f.write(f"Total pages visited: {total_pages}\n\n")
+    f.write(f"Longest page: {largest_page['url']}\n\t{largest_page['word_count']} words\n\n")
+    f.write(f"Unique subdomains visited: {len(subdomain_metrics)}\n\n")
+    f.write("List of subdomains and the amount of pages in them\n")
+    for i, (host, metrics) in enumerate(sorted(subdomain_metrics.items(), key=lambda x: x[0]), start=1):
+        f.write(f"{i}.\t{host}\n")
+        f.write(f"\t\tpages: {metrics['page_count']}\n")
+        f.write(f"\t\tpaths: {metrics['path_count']}\n")
+    
+    f.write("\n\nTop 50 words\n")
+    for i, (word, count) in enumerate(top_50_words, start=1):
+        f.write(f"\t{i}. {word}:\t{count}\n")
+
+
+def format_data_for_report(json_data):
+    total_pages = len(json_data["url_info"])
+    largest_page = max(json_data["url_info"], key=lambda x: x["word_count"])
+    top_50_words = get_top_50_words(json_data["words_counter"])
+    subdomain_metrics = {}
+    for item in json_data["url_info"]:
+        parsed = urlparse(item["url"])
+        page = f"{parsed.hostname}{parsed.path}?{parsed.query}"
+        core_url = item["core_url"]
+        host = core_url.split("/", 1)[0]
+        subdomain_metrics[host] = subdomain_metrics.get(host, {})
+        subdomain_metrics[host]["unique_paths"] = subdomain_metrics[host].get("unique_paths", set())
+        subdomain_metrics[host]["unique_paths"].add(core_url)
+        subdomain_metrics[host]["unique_pages"] = subdomain_metrics[host].get("unique_pages", set())
+        subdomain_metrics[host]["unique_pages"].add(page)
+
+    for host, metrics in subdomain_metrics.items():
+        metrics["path_count"] = len(metrics["unique_paths"])
+        metrics["page_count"] = len(metrics["unique_pages"])
+        del metrics["unique_paths"]
+        del metrics["unique_pages"]
+
+
+        # subdomain_metrics: {host: {path_count: int, page_count: int}}
+        
+    return (total_pages, largest_page, top_50_words, subdomain_metrics)
