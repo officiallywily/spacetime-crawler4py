@@ -122,7 +122,7 @@ MAX_QUERY_PARAMS = 4
 MAX_QUERY_LENGTH = 200
 MAX_PATH_SEGMENTS = 7
 MAX_URL_LENGTH = 1000
-MAX_VISITS_PER_PAGE = 5 # default to 200. testing with lower values to make crawler end faster
+MAX_VISITS_PER_PAGE = 200 # default to 200. testing with lower values to make crawler end faster
 BUFFER_DUMP_SIZE = 1000 # default to 2000. testing with lower values to make crawler end faster
 #endregion
 
@@ -245,6 +245,11 @@ def visits_exceeded(url):
     times_visited = visited_counter.get(core_url, 0)
     return times_visited > MAX_VISITS_PER_PAGE
 
+
+def get_top_50_words(words_counter):
+    top_50_tuples = sorted(list(words_counter.items()), key=lambda x: x[1], reverse=True)[:50]
+    return top_50_tuples
+
 def is_valid_host(host: str) -> bool:
     if not host:
         return False
@@ -256,11 +261,6 @@ def is_valid_host(host: str) -> bool:
             return True
 
     return False
-
-def get_top_50_words(words_counter):
-    top_50_tuples = sorted(list(words_counter.items()), key=lambda x: x[1], reverse=True)[:50]
-    return top_50_tuples
-
 # endregion
 
 # region main functions
@@ -303,11 +303,6 @@ def extract_next_links(url, resp):
             print(f"Skipping malformed link {raw_url}: {e}")
             continue
 
-
-
-
-
-
     return urls
 
 def is_valid(url):
@@ -319,24 +314,16 @@ def is_valid(url):
         parsed = urlparse(url)
 
         # scheme checking
-
         if parsed.scheme not in set(["http", "https"]):
             return False
 
-        # host checking. (must expand for traps later... for now just keep it to the
-        # basic set of four urls)
-        host = parsed.hostname
+        # host checking.
         
+        host = parsed.hostname
         if not is_valid_host(host):
             return False
 
         # path checking
-
-        # checking for paths that repeat 3 times or more (like /about/about/about
-        # or /about/people/about/people/about/...
-        # checking for paths that are longer than 15 segments (just a rough number i chose)
-        # also check path
-        # Inside is_valid(url):
         if re.search(r"/\d{5,}/?$", parsed.path) or re.search(r":\d{5,}/?$", parsed.path):
             return False
             
@@ -357,19 +344,6 @@ def is_valid(url):
             return False
 
         # query checking
-
-        # checking for query length being 4 or more (too long)
-        # Repetitive Directories: URLs that repeat patterns, such as /folder/page/folder/page/, 
-        # frequently signal a loop trap.Excessive Dynamic Parameters: Long, messy query strings 
-        # or excessive session IDs (?sessionid=...) can generate unique URLs for identical content.
-        # Infinite Calendar/Filtering: Dynamic calendars that allow navigation to the year 9999 
-        # or complex filter combinations (e.g., size, color, price) on e-commerce sites often 
-        # create endless crawl paths.Similar Content, Different URL: If multiple deep-path URLs 
-        # return identical page content, it is likely a trap. (found online)
-        # 
-        # also block action= queries because it has unwanted effects like downloading
-
-        # also check for query of long character lengths (one query param might be long)
         if len(parsed.query) > MAX_QUERY_LENGTH:
             return False 
 
@@ -388,8 +362,7 @@ def is_valid(url):
                 if cal_words > CALENDAR_WORD_LIMIT: 
                     return False
 
-        # blocks weird extensions taht arenbt websites
-        
+        # blocks weird extensions that arenbt websites
         if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
