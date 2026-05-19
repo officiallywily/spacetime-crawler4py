@@ -1,9 +1,9 @@
-Total pages visited: 7286
+Total pages visited: 15752
 
 Longest page: http://www.ics.uci.edu/~cs224
 	78184 words
 
-Unique subdomains visited: 92
+Unique subdomains visited: 101
 
 List of subdomains and the amount of pages in them
 1.	accessibility.ics.uci.edu
@@ -16,322 +16,349 @@ List of subdomains and the amount of pages in them
 		pages: 7
 		paths: 7
 4.	archive.ics.uci.edu
-		pages: 32
-		paths: 30
+		pages: 209
+		paths: 115
 5.	asterix.ics.uci.edu
 		pages: 7
 		paths: 7
-6.	bit.ics.uci.edu
+6.	betapro.proteomics.ics.uci.edu
+		pages: 4
+		paths: 4
+7.	bit.ics.uci.edu
 		pages: 1
 		paths: 1
-7.	cert.ics.uci.edu
-		pages: 28
+8.	cdb.ics.uci.edu
+		pages: 47
+		paths: 36
+9.	cert.ics.uci.edu
+		pages: 34
 		paths: 26
-8.	checkin.ics.uci.edu
+10.	checkin.ics.uci.edu
 		pages: 8
 		paths: 8
-9.	chenli.ics.uci.edu
+11.	chemdb.ics.uci.edu
+		pages: 46
+		paths: 35
+12.	chenli.ics.uci.edu
 		pages: 10
 		paths: 10
-10.	cloudberry.ics.uci.edu
+13.	cloudberry.ics.uci.edu
 		pages: 6
 		paths: 5
-11.	cml.ics.uci.edu
-		pages: 237
+14.	cml.ics.uci.edu
+		pages: 265
 		paths: 200
-12.	code.ics.uci.edu
+15.	code.ics.uci.edu
 		pages: 13
 		paths: 13
-13.	computableplant.ics.uci.edu
-		pages: 90
+16.	computableplant.ics.uci.edu
+		pages: 108
 		paths: 84
-14.	containers.ics.uci.edu
+17.	containers.ics.uci.edu
 		pages: 1
 		paths: 1
-15.	courselisting.ics.uci.edu
+18.	courselisting.ics.uci.edu
 		pages: 4
 		paths: 3
-16.	create.ics.uci.edu
+19.	create.ics.uci.edu
 		pages: 4
 		paths: 4
-17.	cs.ics.uci.edu
+20.	cs.ics.uci.edu
 		pages: 10
 		paths: 10
-18.	cs.uci.edu
+21.	cs.uci.edu
 		pages: 1
 		paths: 1
-19.	dgillen.ics.uci.edu
-		pages: 32
-		paths: 32
-20.	ds4all.ics.uci.edu
-		pages: 9
-		paths: 9
-21.	duttgroup.ics.uci.edu
-		pages: 116
-		paths: 116
-22.	dynamo.ics.uci.edu
+22.	deeprxn.ics.uci.edu
 		pages: 31
 		paths: 31
-23.	edgelab.ics.uci.edu
+23.	dgillen.ics.uci.edu
+		pages: 32
+		paths: 32
+24.	ds4all.ics.uci.edu
+		pages: 9
+		paths: 9
+25.	duttgroup.ics.uci.edu
+		pages: 116
+		paths: 116
+26.	dynamo.ics.uci.edu
+		pages: 31
+		paths: 31
+27.	edgelab.ics.uci.edu
 		pages: 7
 		paths: 7
-24.	elms.ics.uci.edu
+28.	elms.ics.uci.edu
 		pages: 2
 		paths: 2
-25.	emj.ics.uci.edu
-		pages: 34
+29.	emj.ics.uci.edu
+		pages: 39
 		paths: 32
-26.	evoke.ics.uci.edu
+30.	evoke.ics.uci.edu
 		pages: 4
 		paths: 4
-27.	fellowships.ics.uci.edu
+31.	fellowships.ics.uci.edu
 		pages: 2
 		paths: 2
-28.	flamingo.ics.uci.edu
-		pages: 17
+32.	flamingo.ics.uci.edu
+		pages: 29
 		paths: 13
-29.	fr.ics.uci.edu
+33.	fr.ics.uci.edu
 		pages: 3
 		paths: 3
-30.	futurehealth.ics.uci.edu
+34.	futurehealth.ics.uci.edu
 		pages: 118
 		paths: 118
-31.	gitlab.ics.uci.edu
+35.	gitlab.ics.uci.edu
 		pages: 3
 		paths: 3
-32.	gradinfo.ics.uci.edu
+36.	gradinfo.ics.uci.edu
 		pages: 2
 		paths: 2
-33.	grape.ics.uci.edu
+37.	grape.ics.uci.edu
 		pages: 304
 		paths: 304
-34.	graphics.ics.uci.edu
+38.	graphics.ics.uci.edu
 		pages: 1
 		paths: 1
-35.	hack.ics.uci.edu
+39.	hack.ics.uci.edu
 		pages: 1
 		paths: 1
-36.	helpdesk.ics.uci.edu
-		pages: 3
+40.	helpdesk.ics.uci.edu
+		pages: 4
 		paths: 1
-37.	hobbes.ics.uci.edu
+41.	hobbes.ics.uci.edu
 		pages: 10
 		paths: 10
-38.	hpi.ics.uci.edu
+42.	hpi.ics.uci.edu
 		pages: 5
 		paths: 5
-39.	hub.ics.uci.edu
+43.	hub.ics.uci.edu
 		pages: 4
 		paths: 4
-40.	i-sensorium.ics.uci.edu
+44.	i-sensorium.ics.uci.edu
 		pages: 5
 		paths: 5
-41.	icde2023.ics.uci.edu
+45.	icde2023.ics.uci.edu
 		pages: 46
 		paths: 46
-42.	ics.uci.edu
-		pages: 1003
-		paths: 993
-43.	industryshowcase.ics.uci.edu
+46.	ics.uci.edu
+		pages: 1408
+		paths: 1052
+47.	industryshowcase.ics.uci.edu
 		pages: 24
 		paths: 24
-44.	informatics.ics.uci.edu
+48.	informatics.ics.uci.edu
 		pages: 27
 		paths: 27
-45.	informatics.uci.edu
+49.	informatics.uci.edu
 		pages: 7
 		paths: 7
-46.	intranet.ics.uci.edu
+50.	intranet.ics.uci.edu
 		pages: 14
 		paths: 14
-47.	ipubmed.ics.uci.edu
+51.	ipubmed.ics.uci.edu
 		pages: 1
 		paths: 1
-48.	isg.ics.uci.edu
+52.	isg.ics.uci.edu
 		pages: 226
 		paths: 226
-49.	jgarcia.ics.uci.edu
-		pages: 3
-		paths: 1
-50.	julia-hub.ics.uci.edu
+53.	jgarcia.ics.uci.edu
+		pages: 40
+		paths: 2
+54.	julia-hub.ics.uci.edu
 		pages: 2
 		paths: 2
-51.	luci.ics.uci.edu
+55.	luci.ics.uci.edu
 		pages: 4
 		paths: 4
-52.	mailman.ics.uci.edu
+56.	mailman.ics.uci.edu
 		pages: 38
 		paths: 38
-53.	malek.ics.uci.edu
+57.	malek.ics.uci.edu
 		pages: 1
 		paths: 1
-54.	mcs.ics.uci.edu
+58.	mcs.ics.uci.edu
 		pages: 12
 		paths: 12
-55.	mdogucu.ics.uci.edu
+59.	mdogucu.ics.uci.edu
 		pages: 1
 		paths: 1
-56.	mds.ics.uci.edu
+60.	mds.ics.uci.edu
 		pages: 8
 		paths: 8
-57.	mhcid.ics.uci.edu
+61.	mhcid.ics.uci.edu
 		pages: 19
 		paths: 19
-58.	mswe.ics.uci.edu
+62.	mlphysics.ics.uci.edu
+		pages: 154
+		paths: 18
+63.	mswe.ics.uci.edu
 		pages: 10
 		paths: 10
-59.	myip.ics.uci.edu
-		pages: 1
-		paths: 1
-60.	nalini.ics.uci.edu
-		pages: 7
-		paths: 7
-61.	netreg.ics.uci.edu
-		pages: 3
-		paths: 2
-62.	ngs.ics.uci.edu
-		pages: 1964
-		paths: 1962
-63.	oai.ics.uci.edu
-		pages: 6
-		paths: 6
-64.	psearch.ics.uci.edu
-		pages: 1
-		paths: 1
-65.	radicle.ics.uci.edu
-		pages: 1
-		paths: 1
-66.	riscit.ics.uci.edu
-		pages: 1
-		paths: 1
-67.	scale.ics.uci.edu
-		pages: 7
-		paths: 7
-68.	seal.ics.uci.edu
-		pages: 44
-		paths: 44
-69.	sherlock.ics.uci.edu
-		pages: 7
-		paths: 7
-70.	signage.ics.uci.edu
-		pages: 2
-		paths: 2
-71.	speedtest.ics.uci.edu
-		pages: 1
-		paths: 1
-72.	staging-hub.ics.uci.edu
-		pages: 2
-		paths: 2
-73.	stairs.ics.uci.edu
+64.	mupro.proteomics.ics.uci.edu
 		pages: 3
 		paths: 3
-74.	stat.ics.uci.edu
+65.	myip.ics.uci.edu
+		pages: 1
+		paths: 1
+66.	nalini.ics.uci.edu
+		pages: 7
+		paths: 7
+67.	netreg.ics.uci.edu
+		pages: 3
+		paths: 2
+68.	ngs.ics.uci.edu
+		pages: 1968
+		paths: 1963
+69.	oai.ics.uci.edu
+		pages: 6
+		paths: 6
+70.	pepito.proteomics.ics.uci.edu
+		pages: 5
+		paths: 5
+71.	psearch.ics.uci.edu
+		pages: 1
+		paths: 1
+72.	radicle.ics.uci.edu
+		pages: 1
+		paths: 1
+73.	riscit.ics.uci.edu
+		pages: 1
+		paths: 1
+74.	scale.ics.uci.edu
+		pages: 7
+		paths: 7
+75.	scratch.proteomics.ics.uci.edu
+		pages: 4
+		paths: 4
+76.	seal.ics.uci.edu
+		pages: 46
+		paths: 46
+77.	selectpro.proteomics.ics.uci.edu
+		pages: 5
+		paths: 5
+78.	sherlock.ics.uci.edu
+		pages: 7
+		paths: 7
+79.	signage.ics.uci.edu
+		pages: 2
+		paths: 2
+80.	speedtest.ics.uci.edu
+		pages: 1
+		paths: 1
+81.	staging-hub.ics.uci.edu
+		pages: 2
+		paths: 2
+82.	stairs.ics.uci.edu
+		pages: 3
+		paths: 3
+83.	stat.ics.uci.edu
 		pages: 11
 		paths: 11
-75.	stat.uci.edu
+84.	stat.uci.edu
 		pages: 2
 		paths: 2
-76.	summeracademy.ics.uci.edu
+85.	summeracademy.ics.uci.edu
 		pages: 12
 		paths: 12
-77.	support.ics.uci.edu
+86.	support.ics.uci.edu
 		pages: 7
 		paths: 7
-78.	swiki.ics.uci.edu
+87.	swiki.ics.uci.edu
 		pages: 137
 		paths: 136
-79.	tad.ics.uci.edu
+88.	tad.ics.uci.edu
 		pages: 2
 		paths: 2
-80.	tastier.ics.uci.edu
+89.	tastier.ics.uci.edu
 		pages: 1
 		paths: 1
-81.	tutoring.ics.uci.edu
+90.	tutoring.ics.uci.edu
 		pages: 5
 		paths: 5
-82.	unite.ics.uci.edu
+91.	unite.ics.uci.edu
 		pages: 10
 		paths: 10
-83.	vision.ics.uci.edu
+92.	vision.ics.uci.edu
 		pages: 212
 		paths: 212
-84.	wics.ics.uci.edu
+93.	wics.ics.uci.edu
 		pages: 231
 		paths: 231
-85.	wiki.ics.uci.edu
+94.	wiki.ics.uci.edu
 		pages: 672
 		paths: 671
-86.	www-db.ics.uci.edu
+95.	www-db.ics.uci.edu
 		pages: 23
 		paths: 23
-87.	www.cs.uci.edu
+96.	www.cs.uci.edu
 		pages: 3
 		paths: 3
-88.	www.ics.uci.edu
-		pages: 1138
-		paths: 1106
-89.	www.informatics.ics.uci.edu
+97.	www.ics.uci.edu
+		pages: 1324
+		paths: 1153
+98.	www.informatics.ics.uci.edu
 		pages: 6
 		paths: 6
-90.	www.informatics.uci.edu
+99.	www.informatics.uci.edu
 		pages: 17
 		paths: 17
-91.	www.stat.uci.edu
+100.	www.stat.uci.edu
 		pages: 5
 		paths: 5
-92.	xtune.ics.uci.edu
+101.	xtune.ics.uci.edu
 		pages: 6
 		paths: 6
 
 
 Top 50 words
-	1. ics:	15975
-	2. research:	14207
-	3. ramesh:	11575
-	4. uci:	10775
-	5. data:	10534
-	6. information:	10273
-	7. computer:	9911
-	8. students:	8417
-	9. current:	8264
-	10. university:	7558
-	11. computing:	7365
-	12. learning:	7130
-	13. science:	6929
-	14. jain:	6594
-	15. news:	6454
-	16. past:	6425
-	17. systems:	6343
-	18. edu:	6070
-	19. software:	5914
-	20. read:	5836
-	21. irvine:	5673
-	22. events:	5619
-	23. project:	5485
-	24. courses:	5038
-	25. new:	4969
-	26. time:	4867
-	27. people:	4806
-	28. projects:	4755
-	29. pdf:	4666
-	30. access:	4629
-	31. books:	4501
-	32. companies:	4418
-	33. models:	4125
-	34. machine:	4062
-	35. theme:	4027
-	36. favorite:	4015
-	37. vision:	3985
-	38. group:	3900
-	39. experiential:	3861
-	40. student:	3825
-	41. based:	3819
-	42. home:	3750
-	43. management:	3646
-	44. use:	3553
-	45. social:	3429
-	46. multimedia:	3418
-	47. services:	3401
-	48. school:	3377
-	49. dechter:	3315
-	50. system:	3307
+	1. ics:	33449
+	2. research:	29288
+	3. data:	24083
+	4. ramesh:	23180
+	5. uci:	23080
+	6. information:	21783
+	7. computer:	20578
+	8. students:	17394
+	9. current:	16819
+	10. learning:	16200
+	11. university:	15418
+	12. computing:	14969
+	13. science:	14828
+	14. jain:	13220
+	15. news:	13186
+	16. systems:	13177
+	17. edu:	12947
+	18. past:	12885
+	19. software:	12268
+	20. read:	11943
+	21. irvine:	11745
+	22. events:	11380
+	23. project:	11312
+	24. new:	10370
+	25. courses:	10148
+	26. time:	10002
+	27. pdf:	9884
+	28. access:	9806
+	29. people:	9774
+	30. projects:	9670
+	31. machine:	9291
+	32. books:	9062
+	33. companies:	8864
+	34. models:	8566
+	35. student:	8199
+	36. vision:	8131
+	37. theme:	8063
+	38. favorite:	8040
+	39. group:	7973
+	40. based:	7923
+	41. home:	7867
+	42. experiential:	7773
+	43. use:	7360
+	44. management:	7328
+	45. school:	6985
+	46. paper:	6976
+	47. social:	6947
+	48. multimedia:	6855
+	49. system:	6838
+	50. services:	6836
